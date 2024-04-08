@@ -17,6 +17,11 @@ class CheckPermission
     public function handle(Request $request, Closure $next ,$permissionName): Response
     {
         $user=Auth::user();
+
+        if ($user && $user->is_superadmin) {
+            return $next($request); // Super admin, grant all permissions
+        }
+        
         if($user && $user->hasPermission($permissionName))
         {
             return $next($request);

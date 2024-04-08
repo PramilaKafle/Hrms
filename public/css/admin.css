@@ -1,0 +1,53 @@
+/* Style for the sidebar */
+.sidebar {
+    background-color: #f3f4f6; /* Background color of the sidebar */
+    padding: 20px; /* Padding around the sidebar content */
+  }
+  
+  /* Style for the main content */
+  .main-content {
+    background-color: #ffffff; /* Background color of the main content area */
+    padding: 20px; /* Padding around the main content */
+  }
+  
+  /* Grid container styles */
+  .grid {
+    width: 100%; /* Set width to 100% */
+  }
+  
+  /* Grid column styles */
+  .grid-cols-4 {
+    display: grid; /* Use grid layout for columns */
+    grid-template-columns: repeat(4, 1fr); /* Define 4 equal columns */
+  }
+  
+  /* Adjust column spans for responsiveness */
+  .col-span-1 {
+    grid-column: span 1; /* Span 1 column */
+  }
+  
+  .col-span-3 {
+    grid-column: span 3; /* Span 3 columns */
+  }
+  
+  /* Shadow and rounded corner styles */
+  .shadow-sm {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Shadow effect */
+  }
+  
+  .sm\:rounded-lg {
+    border-radius: 0.375rem; /* Rounded corners */
+  }
+
+
+    .circle {
+      width: 30px; /* Adjust as needed */
+      height: 30px; /* Adjust as needed */
+      border-radius: 50%;
+      background-color: #ccc; /* Background color of the circle */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  

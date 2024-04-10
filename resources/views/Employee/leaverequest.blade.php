@@ -8,22 +8,43 @@
     <div class="main-content mt-4">
         <div class="card">
             <div class="card-header">
-                <div class="row"></div>
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-ms-6 d-flex justify-content-end">
+                        <a href="{{route('leave.index')}}"class="btn btn-success">Back</a>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
-                <form action="" method='POST' enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <label for="start_date">Start Date</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date">
+                <div class="container">
+                    <form class="form-horizontal" action="{{route('leave.store')}}" method='POST' enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group row mb-4">
+                            <label class="control-label col-sm-4 " for="start_date">Start Date</label>
+                            <div class="col-sm-5"   data-date-format="mm-dd-yyyy">
+                                 <input type="date" class="form-control" id="start_date" name="start_date">
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="end_date">End Date:</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date">
+                        <div class="form-group row mb-4">
+                            <label class="control-label col-sm-4 " for="end_date">End Date:</label>
+                            <div class="col-sm-5">
+                                <input type="date" class="form-control" id="end_date" name="end_date">
+                            </div>
                         </div>
-                    </div>
-                </form>
+                          <div class="form-group row mb-4">
+                            <label class="control-label col-sm-4 " for="end_date">Description:</label>
+                            <div class="col-sm-5">  
+                                <textarea name="description" id="" cols="50" rows="3"></textarea>
+                             </div>
+                          </div>
+                          <div class="form-group  col-sm-9 d-flex justify-content-end">
+                            <button class="btn btn-primary ">Submit</button>
+                            
+                          </div>
+                        
+                    </form>
+                </div>
+                
             </div>
         </div>
         

@@ -24,3 +24,10 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
 });
+$(document).ready(function(){
+    $('#start_date').datepicker({
+        format: 'mm-dd-yyyy',
+        autoclose: true,
+        title:'pick Date'
+    });
+});

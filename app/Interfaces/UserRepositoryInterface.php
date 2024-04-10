@@ -12,6 +12,7 @@ Interface UserRepositoryInterface{
 
     public function getUserOnly();
     public function getEmployeeOnly();
+ 
     public function getuserswithRoles();
     public function delete($userid);
 

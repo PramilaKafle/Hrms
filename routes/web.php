@@ -39,9 +39,10 @@ Route::get('/redirect',[HomeController::class,'redirect']);
 
 Route::middleware('auth')->group(function () {
     Route::resource('employee', EmployeeController::class);
-    Route::get('/leave',[LeaveRequestController::class,'create'])->name('leaverequest.create');
+   
     Route::resource('/user',UserController::class);
     Route::resource('/role',RoleController::class);
+    Route::resource('/leave',LeaveRequestController::class);
  
 });
    

@@ -4,14 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Interfaces\LeaveRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
+
 class LeaveRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+     private LeaveRepositoryInterface $leaveRepository;
+
+     public function __construct( LeaveRepositoryInterface $leaveRepository)
+     {
+$this->leaveRepository=$leaveRepository;
+     }
     public function index()
     {
-        //
+     $users=  $this->leaveRepository->getUserByEmpId();
+     //dd($users);
+       $leaves=$this->leaveRepository->getLeaveByEmpId();
+        return view('Employee.leave',compact('leaves','users'));
     }
 
     /**
@@ -28,7 +41,14 @@ class LeaveRequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       $data= $request->validate([
+            'start_date'=>['required'],
+            'end_date'=>['required'],
+            'description'=>['required']
+
+        ]);
+        $this->leaveRepository->store($data);
+        return redirect()->route('leave.index');
     }
 
     /**
@@ -60,6 +80,7 @@ class LeaveRequestController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->leaveRepository->delete($id);
+        return redirect()->route('leave.index');
     }
 }

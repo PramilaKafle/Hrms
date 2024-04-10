@@ -7,6 +7,7 @@ use App\Interfaces\RoleRepositoryInterface;
 
 use App\Models\User;
 use App\Models\Employee;
+use App\Models\LeaveRepository;
 
 class UserRepository implements UserRepositoryInterface{
 
@@ -51,11 +52,7 @@ public function update( string  $id,array $data)
     
 if (isset($data['emp_type_id']))
 {
-//     $employee=$this->employeeRepository->findByUserId($id);
-//     $employeedata=[
-//        'emp_type_id'=>$data['emp_type_id'],
-//    ];
-//    $this->employeeRepository->update($employee->id,$employeedata);
+    
 $employeedata=$data['emp_type_id'];
 $user->emp_types()->sync($employeedata);
    

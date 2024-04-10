@@ -19,28 +19,27 @@
                 </div>
             </div>
             <div class="card-body">
-
-                <table class="d-flex justify-content-center">
-                    <tr>
-                        <td style="padding:10px;">Name:</td>
-                        <td>{{ $role->name }}</td>
-                    </tr>
-
-                    <tr>
-                        <td style="padding:10px">Permissions:</td>
-                        @foreach ($role->permissions as $permission)
-                            <td>
-                                {{ $permission->name }}
-                                @if (!$loop->last)
-                                    ,
-                                @endif
-
-                            </td>
-                        @endforeach
-                    </tr>
-
-                </table>
-
+                
+                        <table class="d-flex justify-content-center">
+                            <tr>
+                                <td style="padding:20px;">Name:</td>
+                                <td>{{ $role->name }}</td>
+                            </tr>
+        
+                            <tr>
+                                <td style="padding:20px;">Permissions:</td>
+                                @foreach ($role->permissions as $permission)
+                                    <td>
+                                        {{ $permission->name }}
+                                        @if (!$loop->last)
+                                            ,
+                                        @endif
+        
+                                    </td>
+                                @endforeach
+                            </tr>
+        
+                        </table>
             </div>
         </div>
     </div>

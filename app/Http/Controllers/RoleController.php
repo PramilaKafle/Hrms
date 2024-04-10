@@ -3,15 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Interfaces\RoleRepositoryInterface;
+use App\Interfaces\PermissionRepositoryInterface;
+
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    private RoleRepositoryInterface $roleRepository;
+    private PermissionRepositoryInterface $permissionRepository;
+
+    public function __construct(RoleRepositoryInterface $roleRepository,PermissionRepositoryInterface $permissionRepository)
+    {
+      
+       $this->roleRepository= $roleRepository;
+       $this->permissionRepository=$permissionRepository;
+    }
     public function index()
     {
-        //
+      $roles =$this->roleRepository->all();
+      return view('Admin.role',compact('roles'));
     }
 
     /**
@@ -19,7 +32,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('Admin.role');
+        $permissions=$this->permissionRepository->all();
+        return view('Admin.addrole',compact('permissions'));
+        
     }
 
     /**
@@ -27,7 +42,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data=$request->validate([
+            'name' => ['required','string','max:255' ],
+        'permissions'=>['required'],
+        ]);
+
+        $this->roleRepository->store($data);
+        return redirect()->route('role.index');
     }
 
     /**
@@ -35,7 +56,8 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $role=$this->roleRepository->getRoleById($id);
+        return view('Admin.viewrole',compact('role'));
     }
 
     /**
@@ -43,7 +65,9 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $role=$this->roleRepository->getRoleById($id);
+        $permissions=$this->permissionRepository->all();
+     return view('Admin.editrole',compact('role','permissions'));
     }
 
     /**
@@ -51,7 +75,14 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data=$request->validate([
+            'name' => ['required','string','max:255' ],
+        'permissions'=>['required'],
+        ]);
+      
+        $this->roleRepository->update($id,$data);
+        $role=$this->roleRepository->getRoleById($id);
+        return redirect()->route('role.show',compact('role'));
     }
 
     /**
@@ -59,6 +90,10 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role=$this->roleRepository->getRoleById($id);
+        $this->roleRepository->delete($role);
+
+        return redirect()->route('role.index');
+
     }
 }

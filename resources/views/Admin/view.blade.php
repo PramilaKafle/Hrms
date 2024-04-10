@@ -11,7 +11,7 @@
                 <div class="row">
 
                     <div class="col-md-6">
-                        <h4>All Users</h4>
+                        <h4>All Employees</h4>
                     </div>
                     <div class="col-md-6  d-flex justify-content-end">
 
@@ -34,14 +34,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($allusers as $alluser)
+                        @foreach ($employees as $employee)
                             <tr>
-                                <th scope="row">{{ $alluser->id }}</th>
-                                <td>{{ $alluser->name }}</td>
-                                <td>{{ $alluser->email }}</td>
+                                <th scope="row">{{ $employee->id }}</th>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->email }}</td>
 
-                                @if ($alluser->emp_types->isNotEmpty())
-                                    @foreach ($alluser->emp_types as $emp)
+                                {{-- @if ($employee->emp_types->isNotEmpty())
+                                    @foreach ($employee->emp_types as $emp)
                                         @php
                                             $matchedEmpIds = $employees->where('user_id', $alluser->id);
                                         @endphp
@@ -49,21 +49,28 @@
 
                                         <td>{{ $emp->Name }}</td>
                                     @endforeach
-                                @else
+                                @else --}}
+                                    {{-- <td>-</td>
                                     <td>-</td>
-                                    <td>-</td>
-                                @endif
+                                @endif --}}
+                                @foreach($employee->emp_types as $emp)
+                                @php
+                                $matchedEmpIds = $empid->where('user_id', $employee->id);
+                            @endphp
+                           <td>{{ $matchedEmpIds->implode('id', ', ') }}</td>
+                                <td>{{$emp->Name}}</td>
+                                @endforeach
 
                                 <td>
                                     <div class="d-flex">
 
                                         <a class="btn-sm btn-success btn mx-2"
-                                            href="{{ route('employee.edit', $alluser->id) }}">Edit </a>
+                                            href="{{ route('employee.edit', $employee->id) }}">Edit </a>
                                         <a class="btn-sm btn-primary btn mx-2"
-                                            href="{{ route('employee.show', $alluser->id) }}">View</a>
+                                            href="{{ route('employee.show', $employee->id) }}">View</a>
 
 
-                                        <form action="{{ route('employee.destroy', $alluser->id) }}" method="POST">
+                                        <form action="{{ route('employee.destroy', $employee->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn-sm btn-danger btn">Delete</button>

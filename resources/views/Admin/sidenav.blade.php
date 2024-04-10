@@ -9,8 +9,13 @@
             </a>
             @cannot('hasEmployeeType')
             <div class="sb-sidenav-menu-heading">Interface</div>
-            <a class="nav-link" href="{{route('assign.role')}}">
-                <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
+
+            <a class="nav-link" href="{{route('role.index')}}">
+                <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
+            Role Management
+            </a>
+            <a class="nav-link" href="{{route('user.index')}}">
+                <div class="sb-nav-link-icon"><i class="fa-solid fa-user-secret"></i></div>
                 User Management
             </a>
          

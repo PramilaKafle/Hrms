@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LeaveRequestController;
 
@@ -37,16 +38,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/redirect',[HomeController::class,'redirect']);
 
 Route::middleware('auth')->group(function () {
-    // Route::get('/create',[EmployeeController::class,'create'])->name('employee.create');
-    // Route::post('/store',[EmployeeController::class,'store'])->name('employee.store');
-    // Route::get('/view',[EmployeeController::class,'index'])->name('employee.view');
-    // Route::get('/view/{id}/edit',[EmployeeController::class,'edit'])->name('employee.edit');
-    // Route::patch('/view/{id}/update',[EmployeeController::class,'update'])->name('employee.update');
-    // Route::delete('/view/{id}',[EmployeeController::class,'destroy'])->name('employee.destroy');
-
     Route::resource('employee', EmployeeController::class);
     Route::get('/leave',[LeaveRequestController::class,'create'])->name('leaverequest.create');
-    Route::get('/assignrole',[RoleController::class,'create'])->name('assign.role');
+    Route::resource('/user',UserController::class);
+    Route::resource('/role',RoleController::class);
  
 });
    

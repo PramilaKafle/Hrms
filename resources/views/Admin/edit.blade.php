@@ -34,7 +34,7 @@
                                 name="name" value="{{ $user->name }}">
                         </div>
                        
-                              @if ($emp)  
+                              {{-- @if ($emp)   --}}
                                 <div class="form-group">
                                     <label for="" class="form-label">Employee Type:</label>
                                     <select id="" class="form-control" name="emp_type_id">
@@ -46,7 +46,7 @@
                                             @endforeach
                                     </select>
                                 </div>
-                            @endif
+                            {{-- @endif --}}
                       
                         <div class="form-group">
                             <label for="email" class="form-label">Email:</label>

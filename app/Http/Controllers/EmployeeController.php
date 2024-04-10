@@ -25,7 +25,8 @@ class EmployeeController extends Controller
     private EmployeeTypeRepositoryInterface $employeetypeRepository;
    
 
-     public function __construct( UserRepositoryInterface $userRepository,EmployeeRepositoryInterface $employeeRepository,EmployeeTypeRepositoryInterface $employeetypeRepository)
+     public function __construct( UserRepositoryInterface $userRepository,
+     EmployeeRepositoryInterface $employeeRepository,EmployeeTypeRepositoryInterface $employeetypeRepository)
      {
         $this->employeeRepository =$employeeRepository;
         $this->userRepository= $userRepository;
@@ -40,9 +41,13 @@ class EmployeeController extends Controller
     public function index()
     {
         
-        $allusers=$this->userRepository->all();
-        $employees =$this->employeeRepository->all();
-        return view('Admin.view',compact('allusers','employees'));
+        // $allusers=$this->userRepository->all();
+        // $employees =$this->employeeRepository->all();
+        // return view('Admin.view',compact('allusers','employees'));
+
+        $employees=$this->userRepository->getEmployeeOnly();
+        $empid =$this->employeeRepository->all();
+        return view('Admin.view',compact('employees','empid'));
        
     }
 
@@ -64,25 +69,13 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
+      $data = $request->validate([
             'name' => ['required','string','max:255' ],
             'email' => ['required','email','unique:users'],
             'password' => ['required','min:8'],
             'emp_type_id' => ['required']
-        ]);
-
-        $userdata=[
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'password'=>$request->password,
-        ];
-       
-       $userid = $this->userRepository->store($userdata);
-$employeedata=[
-    'user_id'=>$userid,
-    'emp_type_id'=>$request->emp_type_id,
-];
-$this->employeeRepository->store($employeedata);
+        ]); 
+       $userid = $this->employeeRepository->store($data);
         return   redirect()->route('employee.index');
     }
 
@@ -94,16 +87,7 @@ $this->employeeRepository->store($employeedata);
         
         $user=$this->userRepository->getUserById($id);
         $employee=$this->employeeRepository->findByUserId($id);
-        if( $employee)
-        {
-            $emptype =$this->employeetypeRepository-> findEmptypeById($employee->emp_type_id);
-        }
-        else{
-            $emptype=null;  
-        }
-      
-       
-        return view('Admin.show',compact('user','employee','emptype'));
+        return view('Admin.show',compact('user','employee'));
        
     }
 
@@ -114,10 +98,8 @@ $this->employeeRepository->store($employeedata);
     {
         $user=$this->userRepository->getUserById($id);
         $employeetypes =$this->employeetypeRepository->all();
-         $emp = $user->emp_types->isNotEmpty();
-       
-       
-        return view('Admin.edit',compact('user','employeetypes','emp'));
+
+        return view('Admin.edit',compact('user','employeetypes'));
 
 
        
@@ -131,29 +113,17 @@ $this->employeeRepository->store($employeedata);
         //
 
         $user=$this->userRepository->getUserById($id);
-        $employee=$this->employeeRepository->findByUserId($id);
+       // $employee=$this->employeeRepository->findByUserId($id);
 
-        $request->validate([
+        $data= $request->validate([
             'name' => ['required','string','max:255' ],
             'email' => ['required','email',
-            Rule::unique('users')->ignore($employee->id)],
+            Rule::unique('users')->ignore($user->id)],
             'password' => ['required','min:8'],
             'emp_type_id' => ['required']
         ]);
        
-
-        $userdata=[
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'password'=>$request->password,
-        ];
-        $employeedata=[
-            'emp_type_id'=>$request->emp_type_id,
-        ];
-        $this->userRepository->update($id,$userdata);
-        $this->employeeRepository->update($id,$employeedata);
-
-
+        $this->userRepository->update($id,$data);
         return   redirect()->route('employee.index');
     }
 
@@ -162,7 +132,7 @@ $this->employeeRepository->store($employeedata);
      */
     public function destroy(string $id)
     {
-        $user=$this->userRepository->getUserById($id);;
+        $user=$this->userRepository->getUserById($id);
        
         $this->userRepository->delete($user);
         return redirect()->route('employee.index');

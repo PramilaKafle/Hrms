@@ -22,7 +22,7 @@ class CheckPermission
             return $next($request); // Super admin, grant all permissions
         }
         
-        if($user && $user->hasPermission($permissionName))
+        elseif($user && $user->hasPermission($permissionName))
         {
             return $next($request);
         }

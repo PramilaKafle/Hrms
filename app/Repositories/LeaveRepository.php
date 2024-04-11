@@ -43,16 +43,18 @@ class LeaveRepository implements LeaveRepositoryInterface
       $data['emp_id']=$empid;
         $leave=LeaveRequest::create($data);
     }
-    public function getUserByEmpId()
+    
+public function getUserByEmpId()
 {
-    $empidsonleave=LeaveRequest::all()->pluck('emp_id');
-    $employees = Employee::whereIn('id', $empidsonleave)->get();
-   $userIds = $employees->pluck('user_id')->toArray();
-   $users = User::whereIn('id', $userIds)->get();
-   //dd($users);
+    $empidsonleave = LeaveRequest::pluck('emp_id')->toArray(); // Get all emp_ids from LeaveRequest
+    $users = User::whereHas('emp_types', function ($query) use ($empidsonleave) {
+        $query->whereIn('employees.id', $empidsonleave); 
+    })->get();
+  
+   
     return $users;
-
 }
+
 
     public function delete($id)
     {

@@ -7,5 +7,6 @@ Interface LeaveRepositoryInterface
     public function getleaveById( string $id);
     public function getUserByEmpId();
     public function getLeaveByEmpId();
+    public function calculateRemainingLeaves();
     public function store($data);
 }

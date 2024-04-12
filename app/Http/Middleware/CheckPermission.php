@@ -19,10 +19,10 @@ class CheckPermission
         $user=Auth::user();
 
         if ($user && $user->is_superadmin) {
-            return $next($request); // Super admin, grant all permissions
+            return $next($request); 
         }
         
-        elseif($user && $user->hasPermission($permissionName))
+        if($user && $user->hasPermission($permissionName))
         {
             return $next($request);
         }

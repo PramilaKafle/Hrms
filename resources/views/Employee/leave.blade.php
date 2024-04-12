@@ -7,6 +7,10 @@
         <li class="breadcrumb-item active">Leave Information</li>
     </ol>
     <div class="main-content mt-4">
+        @if ($message=@session('error'))
+        <div class="alert alert-danger">{{ $message }}</div>
+       
+    @endif
         <div class="card">
             @cannot('hasEmployeeType')
                 <table class="table">
@@ -56,6 +60,11 @@
                         <div class="col-md-6">
                             <a href="{{ route('leave.create') }}" class="btn btn-success">Request Leave</a>
                         </div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                            <h1 class="mb-4" style="color:#e94e3d; font-weight:bold">  Remaining LeaveDays: {{$remainingleavedays}}</h1> 
+                        </div>
+                        
+                       
                     </div>
                 </div>
                 <div class="card-body">
@@ -65,17 +74,20 @@
                                 <th scope="col" style="width: 10%">ID</th>
                                 <th scope="col" style="width: 10%">Start Date</th>
                                 <th scope="col" style="width: 10%">End Date</th>
+                                <th scope="col" style="width: 10%">Applied for</th>
                                 <th scope="col" style="width: 10%">Status</th>
                                 <th scope="col" style="width: 10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($leaves as $leave)
+                            
                                 <tr>
 
                                     <td>{{ $leave->id }}</td>
                                     <td>{{ $leave->start_date }}</td>
                                     <td>{{ $leave->end_date }}</td>
+                                    <td>{{$leave->applied_for}}</td>
                                     <td>--</td>
                                     <td>
                                         <form action="{{ route('leave.destroy', $leave->id) }}" method="POST">
@@ -84,8 +96,11 @@
                                             <button class="btn-sm btn-danger btn">Cancel Request</button>
                                         </form>
                                     </td>
+                                   
                                 </tr>
+                               
                             @endforeach
+                           
                         </tbody>
                     </table>
                 </div>

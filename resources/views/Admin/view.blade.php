@@ -6,6 +6,11 @@
         <li class="breadcrumb-item active">Employee Table</li>
     </ol>
     <div class="main-content mt-4">
+        @if ($message = @session('success'))
+            <div class="alert alert-danger">{{ $message }}</div>
+        @elseif($message = @session('error'))
+            <div class="alert alert-danger">{{ $message }}</div>
+        @endif
         <div class="card  mb-4">
             <div class="card-header">
                 <div class="row">
@@ -39,26 +44,12 @@
                                 <th scope="row">{{ $employee->id }}</th>
                                 <td>{{ $employee->name }}</td>
                                 <td>{{ $employee->email }}</td>
-
-                                {{-- @if ($employee->emp_types->isNotEmpty())
-                                    @foreach ($employee->emp_types as $emp)
-                                        @php
-                                            $matchedEmpIds = $employees->where('user_id', $alluser->id);
-                                        @endphp
-                                        <td>{{ $matchedEmpIds->implode('id', ', ') }}</td>
-
-                                        <td>{{ $emp->Name }}</td>
-                                    @endforeach
-                                @else --}}
-                                    {{-- <td>-</td>
-                                    <td>-</td>
-                                @endif --}}
-                                @foreach($employee->emp_types as $emp)
-                                @php
-                                $matchedEmpIds = $empid->where('user_id', $employee->id);
-                            @endphp
-                           <td>{{ $matchedEmpIds->implode('id', ', ') }}</td>
-                                <td>{{$emp->Name}}</td>
+                                @foreach ($employee->emp_types as $emp)
+                                    @php
+                                        $matchedEmpIds = $empid->where('user_id', $employee->id);
+                                    @endphp
+                                    <td>{{ $matchedEmpIds->implode('id', ', ') }}</td>
+                                    <td>{{ $emp->Name }}</td>
                                 @endforeach
 
                                 <td>

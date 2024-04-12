@@ -17,6 +17,9 @@ class UserController extends Controller
       
        $this->userRepository= $userRepository;
        $this->roleRepository= $roleRepository;
+       $this->middleware('CheckPermission:create')->except('index','show');
+       $this->middleware('CheckPermission:view')->only(['index','show']);
+       $this->middleware('CheckPermission:delete')->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -46,6 +49,7 @@ class UserController extends Controller
             'email'=>['required','email','unique:users'],
             'password'=>['required','min:8'],
             'roles'=>[],
+            'image'=>[],
         ]);
         $this->userRepository->store($data);
         return redirect()->route('user.index');
@@ -82,7 +86,7 @@ class UserController extends Controller
             'email' => ['required','email',
             Rule::unique('users')->ignore($users->id)],
             'password' => ['required','min:8'],
-            'roles' => ['required']
+            'roles' => ['required'],
         ]);
          $this->userRepository->update($id,$data);
          return redirect()->route('user.index');

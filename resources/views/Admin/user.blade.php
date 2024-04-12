@@ -6,6 +6,11 @@
     <li class="breadcrumb-item active">User Table</li>
 </ol>
 <div class="main-content mt-4">
+    @if($message=@session('success'))
+    <div class="alert alert-danger">{{ $message }}</div>
+    @elseif($message=@session('error'))
+    <div class="alert alert-danger">{{ $message }}</div>
+    @endif
 <div class="card">
     <div class="card-header">
         <div class="row">

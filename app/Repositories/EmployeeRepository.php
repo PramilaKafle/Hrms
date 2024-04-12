@@ -33,8 +33,8 @@ public function findByUserId(string $id)
 {
     return Employee::where('user_id',$id)->first();
 }
-public function update( string  $id,array $employeedata)
-{
-return Employee::whereId($id)->update($employeedata);
-}
+// public function update( string  $id,array $employeedata)
+// {
+// return Employee::whereId($id)->update($employeedata);
+// }
 }

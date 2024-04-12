@@ -8,5 +8,5 @@ Interface EmployeeRepositoryInterface{
      public function store( array $data);
 
     public function findByUserId(string $id);
-    public function update( string $id,array  $employeedata);
+    // public function update( string $id,array  $employeedata);
 }

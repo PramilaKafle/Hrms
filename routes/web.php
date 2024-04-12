@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
    
     Route::resource('/user',UserController::class);
     Route::resource('/role',RoleController::class);
+  
     Route::resource('/leave',LeaveRequestController::class);
  
 });

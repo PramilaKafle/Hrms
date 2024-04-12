@@ -35,15 +35,12 @@ class EmployeeController extends Controller
 
         $this->middleware('CheckPermission:create')->except('index','show');
          $this->middleware('CheckPermission:view')->only(['index','show']);
-        // $this->middleware('CheckPermission:delete')->only('destroy');
+         $this->middleware('CheckPermission:delete')->only('destroy');
+        
      }
 
     public function index()
     {
-        
-        // $allusers=$this->userRepository->all();
-        // $employees =$this->employeeRepository->all();
-        // return view('Admin.view',compact('allusers','employees'));
 
         $employees=$this->userRepository->getEmployeeOnly();
         $empid =$this->employeeRepository->all();

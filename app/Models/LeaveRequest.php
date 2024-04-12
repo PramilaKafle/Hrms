@@ -14,6 +14,7 @@ class LeaveRequest extends Model
 'start_date',
 'end_date',
 'description',
+'applied_for',
     ];
 
     public function employees()

@@ -7,6 +7,7 @@ namespace App\Interfaces;
     public function store($data);
     public function getRoleById(string $id);
     Public function update(string $id, $data);
+    public function getPermissions();
    //  public function getRoleswithPermission(string $id);
 
    //public function findRoleByUserId(string $id);

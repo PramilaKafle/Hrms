@@ -8,12 +8,18 @@
 </ol>
 
 <div class="main-content mt-4">
+    @if($message=@session('success'))
+    <div class="alert alert-danger">{{ $message }}</div>
+    @elseif($message=@session('error'))
+    <div class="alert alert-danger">{{ $message }}</div>
+    @endif
     <div class="card  mb-4">
         <div class="card-header">
             <div class="row">
 
                 <div class="col-md-6">
                     <a class="btn btn-success " href="{{ route('role.create') }}"><i class="fa-solid fa-plus"></i>Add Role</a>
+                 
                 </div>
                 <div class="col-md-6  d-flex justify-content-end">
 

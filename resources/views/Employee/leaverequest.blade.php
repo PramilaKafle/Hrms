@@ -6,6 +6,11 @@
         <li class="breadcrumb-item active">Leave Request</li>
     </ol>
     <div class="main-content mt-4">
+        @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-danger">{{ $error }}</div>
+        @endforeach
+    @endif
         <div class="card">
             <div class="card-header">
                 <div class="row">

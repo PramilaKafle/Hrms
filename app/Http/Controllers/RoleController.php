@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Interfaces\RoleRepositoryInterface;
-use App\Interfaces\PermissionRepositoryInterface;
+
 
 
 class RoleController extends Controller
@@ -13,13 +13,15 @@ class RoleController extends Controller
      * Display a listing of the resource.
      */
     private RoleRepositoryInterface $roleRepository;
-    private PermissionRepositoryInterface $permissionRepository;
 
-    public function __construct(RoleRepositoryInterface $roleRepository,PermissionRepositoryInterface $permissionRepository)
+
+    public function __construct(RoleRepositoryInterface $roleRepository)
     {
       
        $this->roleRepository= $roleRepository;
-       $this->permissionRepository=$permissionRepository;
+       $this->middleware('CheckPermission:create_role')->except('index','show','edit','update');
+       $this->middleware('CheckPermission:edit_role')->only('edit','update');
+    //    $this->middleware('CheckPermission:view_role')->only('show');
     }
     public function index()
     {
@@ -32,7 +34,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions=$this->permissionRepository->all();
+        $permissions=$this->roleRepository->getPermissions();
         return view('Admin.addrole',compact('permissions'));
         
     }
@@ -66,7 +68,7 @@ class RoleController extends Controller
     public function edit(string $id)
     {
         $role=$this->roleRepository->getRoleById($id);
-        $permissions=$this->permissionRepository->all();
+        $permissions=$this->roleRepository->getPermissions();
      return view('Admin.editrole',compact('role','permissions'));
     }
 

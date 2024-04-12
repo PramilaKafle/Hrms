@@ -5,9 +5,12 @@ use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\EmployeeRepositoryInterface;
 use App\Interfaces\RoleRepositoryInterface;
 
+
 use App\Models\User;
 use App\Models\Employee;
 use App\Models\LeaveRepository;
+use Illuminate\Support\Facades\DB;
+use File;
 
 class UserRepository implements UserRepositoryInterface{
 
@@ -25,46 +28,73 @@ public function all()
 
 public function store( array $data)
 {
-   $userdata=[
-    'name'=>$data['name'],
-    'email'=>$data['email'],
-    'password'=>$data['password'],
-   ];
-   $user= User::create($userdata);
-   $roledata=$data['roles'];
-   $user->roles()->sync($roledata);
- 
+    DB::beginTransaction();
+    try{
+        $userdata=[
+            'name'=>$data['name'],
+            'email'=>$data['email'],
+            'password'=>$data['password'],
+           ];
+           if(isset($data['image']))
+           {
+            $imagename=time().'_'.$data['image']->getClientOriginalName();
+            
+           $image=$data['image']->storeAs('images',$imagename);
+           //dd($image);
+           $userdata['image']=$image;
+           }
+          
+           $user= User::create($userdata);
+          $roledata=$data['roles'];
+           $user->roles()->sync($roledata);
+           DB::commit();
+           return redirect()->back()->with('success', 'User created successfully');
+         
+    }catch(Exception)
+    {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'Error creating user: ');
+    }
+  
 }
 public function getUserById(string $id)
 {
    return User::findOrFail($id);
 }
-public function update( string  $id,array $data)
+public function update(string $id, array $data)
 {
+    DB::beginTransaction();
 
-    $userdata=[
-        'name'=>$data['name'],
-        'email'=>$data['email'],
-        'password'=>$data['password'],
-    ];
-    $user =User::findOrFail($id);
-    $user->update($userdata);
+    try {
+        $userdata = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ];
+
+        $user = User::findOrFail($id);
+        $user->update($userdata);
+        
+        if (isset($data['emp_type_id'])) {
+            $employeedata = $data['emp_type_id'];
+            $user->emp_types()->sync($employeedata);
+            DB::commit();
+            return redirect()->back()->with('success', 'Employee updated successfully');
+        }
+
+        if (isset($data['roles'])) {
+            $roledata = $data['roles'];
+            $user->roles()->sync($roledata);
+        }
+
+        DB::commit();
+         return redirect()->back()->with('success', 'User updated successfully');
+
+    } catch (Exception $e) {
+        DB::rollBack();
+         return redirect()->back()->with('error', 'Error updating user: ');
     
-if (isset($data['emp_type_id']))
-{
-    
-$employeedata=$data['emp_type_id'];
-$user->emp_types()->sync($employeedata);
-   
-}
-
-if (isset($data['roles']))
-{
-    $roledata=$data['roles'];
-   $user->roles()->sync($roledata);
-   
-}
-
+    }
 }
 
 
@@ -91,6 +121,8 @@ public function getuserswithRoles(){
 public function delete($user)
 {
     return $user->delete();
+    return redirect()->back()->with('success', 'User deleted successfully');
+
 }
 
 }

@@ -34,6 +34,12 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group row mb-4">
+                                    <label class="control-label col-sm-2 " for="name">Image:</label>
+                                    <div class="col-sm-8">
+                                        <input type="file" class="form-control" id="image" name="image">
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-4">
                                     <label class="control-label col-sm-2 " for="name">Name:</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="name" name="name">

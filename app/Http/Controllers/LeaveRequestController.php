@@ -20,15 +20,18 @@ class LeaveRequestController extends Controller
 
      public function __construct( LeaveRepositoryInterface $leaveRepository,EmployeeRepositoryInterface $employeeRepository)
      {
-$this->leaveRepository=$leaveRepository;
-$this->employeeRepository=$employeeRepository;
+      $this->leaveRepository=$leaveRepository;
+      $this->employeeRepository=$employeeRepository;
      }
     public function index()
     {
-     $users=  $this->leaveRepository->getUserByEmpId();
+       $users=  $this->leaveRepository->getUserByEmpId();
        $leaves=$this->leaveRepository->getLeaveByEmpId();
        $employee=$this->employeeRepository->all();
-        return view('Employee.leave',compact('leaves','users','employee'));
+
+      $remainingleavedays= $this->leaveRepository->calculateRemainingLeaves();
+ 
+        return view('Employee.leave',compact('leaves','users','employee','remainingleavedays'));
     }
 
     /**

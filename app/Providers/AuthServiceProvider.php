@@ -28,13 +28,13 @@ class AuthServiceProvider extends ServiceProvider
     Gate::define('hasEmployeeType', function (User $user) {
         return $user->emp_types()->exists();
     });
-    Gate::define('hasleaveRequest',function($user)
-    {
-$empid=$user->emp_types()->first()->id;
-$leaves =LeaveRequest::all()->pluck('emp_id');
-return $leaves->contains($empid) ;
+//     Gate::define('hasleaveRequest',function($user)
+//     {
+// $empid=$user->emp_types()->first()->id;
+// $leaves =LeaveRequest::all()->pluck('emp_id');
+// return $leaves->contains($empid) ;
 
-    });
+//     });
 
   
   

@@ -21,7 +21,7 @@
                             <th scope="col" style="width: 10%">Employee Name</th>
                             <th scope="col" style="width: 10%">Start Date</th>
                             <th scope="col" style="width: 10%">End Date</th>
-
+                           
                             <th scope="col" style="width: 10%">Action</th>
 
 
@@ -48,6 +48,28 @@
                                 <td>{{ $leave->end_date }}</td>
 
                                 <td>
+                                    <div class="d-flex">
+
+                                        <a class="btn-sm btn-success btn mx-2"
+                                            href="{{route('leave.approve',$leave->id)}}">
+                                            @if($leave->status == 'approved')
+                                            Approved
+                                            @else
+                                            Approve 
+                                            @endif
+                                         
+                                    </a>
+            
+                                            <a class="btn-sm btn-danger btn mx-2"
+                                            href="{{route('leave.decline',$leave->id)}}">
+                                            @if($leave->status == 'declined')
+                                            Declined
+                                            @else
+                                            Decline 
+                                            @endif
+                                         </a>
+            
+                                    </div> 
                                 </td>
                             </tr>
                         @endforeach
@@ -88,7 +110,7 @@
                                     <td>{{ $leave->start_date }}</td>
                                     <td>{{ $leave->end_date }}</td>
                                     <td>{{$leave->applied_for}}</td>
-                                    <td>--</td>
+                                    <td>{{$leave->status}}</td>
                                     <td>
                                         <form action="{{ route('leave.destroy', $leave->id) }}" method="POST">
                                             @csrf

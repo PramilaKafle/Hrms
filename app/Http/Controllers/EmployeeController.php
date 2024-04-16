@@ -8,11 +8,11 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\Employee;
+use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use App\Interfaces\UserRepositoryInterface;
-use App\Interfaces\EmployeeRepositoryInterface;
-use App\Interfaces\EmployeeTypeRepositoryInterface;
+use App\Interfaces\BaseRepositoryInterface;
+
 
 
 class EmployeeController extends Controller
@@ -20,19 +20,11 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    private UserRepositoryInterface $userRepository;
-    private EmployeeRepositoryInterface $employeeRepository;
-    private EmployeeTypeRepositoryInterface $employeetypeRepository;
+    private BaseRepositoryInterface $baseRepository;
    
-
-     public function __construct( UserRepositoryInterface $userRepository,
-     EmployeeRepositoryInterface $employeeRepository,EmployeeTypeRepositoryInterface $employeetypeRepository)
+     public function __construct( BaseRepositoryInterface $baseRepository)
      {
-        $this->employeeRepository =$employeeRepository;
-        $this->userRepository= $userRepository;
-        $this->employeetypeRepository=$employeetypeRepository;
-
-
+        $this->baseRepository= $baseRepository;
         $this->middleware('CheckPermission:create')->except('index','show');
          $this->middleware('CheckPermission:view')->only(['index','show']);
          $this->middleware('CheckPermission:delete')->only('destroy');
@@ -42,9 +34,10 @@ class EmployeeController extends Controller
     public function index()
     {
 
-        $employees=$this->userRepository->getEmployeeOnly();
-        $empid =$this->employeeRepository->all();
-        return view('Admin.view',compact('employees','empid'));
+        $employees=$this->baseRepository->getEmployeeOnly();
+        $empid =$this->baseRepository->all(Employee::class);
+        $project=$this->baseRepository->all(Project::class);
+        return view('Admin.view',compact('employees','empid','project'));
        
     }
 
@@ -56,8 +49,9 @@ class EmployeeController extends Controller
     public function create()
 
     {
-        $employeetypes =$this->employeetypeRepository->all();
-        return view('Admin.employee',compact('employeetypes'));
+        $employeetypes =$this->baseRepository->all(Emp_type::class);
+        $projects=$this->baseRepository->all(Project::class);
+        return view('Admin.employee',compact('employeetypes','projects'));
     }
 
     /**
@@ -70,9 +64,10 @@ class EmployeeController extends Controller
             'name' => ['required','string','max:255' ],
             'email' => ['required','email','unique:users'],
             'password' => ['required','min:8'],
-            'emp_type_id' => ['required']
+            'emp_type_id' => ['required'],
         ]); 
-       $userid = $this->employeeRepository->store($data);
+       //dd($data);
+       $userid = $this->baseRepository->store(User::class,$data);
         return   redirect()->route('employee.index');
     }
 
@@ -82,8 +77,8 @@ class EmployeeController extends Controller
     public function show(string $id)
     {
         
-        $user=$this->userRepository->getUserById($id);
-        $employee=$this->employeeRepository->findByUserId($id);
+        $user=$this->baseRepository->getById(User::class,$id);
+        $employee=$this->baseRepository->findByUserId($id);
         return view('Admin.show',compact('user','employee'));
        
     }
@@ -93,10 +88,11 @@ class EmployeeController extends Controller
      */
     public function edit(string $id)
     {
-        $user=$this->userRepository->getUserById($id);
-        $employeetypes =$this->employeetypeRepository->all();
+        $user=$this->baseRepository->getById(User::class,$id);
+        $employeetypes =$this->baseRepository->all(Emp_type::class);
+        $projects =$this->baseRepository->all(Project::class);
 
-        return view('Admin.edit',compact('user','employeetypes'));
+        return view('Admin.edit',compact('user','employeetypes','projects'));
 
 
        
@@ -109,7 +105,7 @@ class EmployeeController extends Controller
     {
         //
 
-        $user=$this->userRepository->getUserById($id);
+        $user=$this->baseRepository->getById(User::class,$id);
        // $employee=$this->employeeRepository->findByUserId($id);
 
         $data= $request->validate([
@@ -117,21 +113,38 @@ class EmployeeController extends Controller
             'email' => ['required','email',
             Rule::unique('users')->ignore($user->id)],
             'password' => ['required','min:8'],
-            'emp_type_id' => ['required']
+            'emp_type_id' => ['required'],
+            
         ]);
        
-        $this->userRepository->update($id,$data);
+        $this->baseRepository->update(User::class,$id,$data);
         return   redirect()->route('employee.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function projectassign()
+    {
+     $employees=$this->baseRepository->getEmployeeOnly();
+     //dd($employees);
+     $projects =$this->baseRepository->all(Project::class);
+     return view('Employee.project',compact('employees','projects'));
+    }
+
+    public function projectstore(Request $request)
+    {
+       $request->validate([
+        'user_id'=>['required'],
+        'project_id'=>['required'],
+       ]);
+     $employee=Employee::where('user_id',$request->user_id)->first();
+     $employee->projects()->sync($request->project_id);
+     return redirect()->route('employee.index')->with('success', 'Project assigned to employee successfully.');
+
+    }
     public function destroy(string $id)
     {
-        $user=$this->userRepository->getUserById($id);
+        //$user=$this->baseRepository->getById(User::class,$id);
        
-        $this->userRepository->delete($user);
+        $this->baseRepository->delete( User::class,$id);
         return redirect()->route('employee.index');
     }
 }

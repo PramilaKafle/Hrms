@@ -44,6 +44,14 @@
                                 @endforeach
                             </select>
                         </div>
+                        {{-- <div class="form-group">
+                            <label for="" class="form-label">Project:</label>
+                            <select id="" class="form-control" name="project[]" multiple>
+                                @foreach ($projects as $project)
+                                    <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                @endforeach
+                            </select>
+                        </div> --}}
                         <div class="form-group">
                             <label for="email" class="form-label">Email:</label>
                             <input type="email" class="form-control" id="email" placeholder="Enter email"

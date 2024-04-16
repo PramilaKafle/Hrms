@@ -3,29 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Interfaces\RoleRepositoryInterface;
+use App\Interfaces\BaseRepositoryInterface;
 
-
+use App\Models\Role;
+use App\Models\Permission;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    private RoleRepositoryInterface $roleRepository;
+   
+    private BaseRepositoryInterface $baseRepository;
 
-
-    public function __construct(RoleRepositoryInterface $roleRepository)
+    public function __construct(BaseRepositoryInterface $baseRepository)
     {
       
-       $this->roleRepository= $roleRepository;
+      
+       $this->baseRepository= $baseRepository;
        $this->middleware('CheckPermission:create_role')->except('index','show','edit','update');
        $this->middleware('CheckPermission:edit_role')->only('edit','update');
     //    $this->middleware('CheckPermission:view_role')->only('show');
     }
     public function index()
     {
-      $roles =$this->roleRepository->all();
+      $roles =$this->baseRepository->all(Role::class);
       return view('Admin.role',compact('roles'));
     }
 
@@ -34,7 +36,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions=$this->roleRepository->getPermissions();
+        $permissions=$this->baseRepository->all(Permission::class);
         return view('Admin.addrole',compact('permissions'));
         
     }
@@ -49,7 +51,7 @@ class RoleController extends Controller
         'permissions'=>['required'],
         ]);
 
-        $this->roleRepository->store($data);
+        $this->baseRepository->store(Role::class,$data);
         return redirect()->route('role.index');
     }
 
@@ -58,7 +60,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        $role=$this->roleRepository->getRoleById($id);
+        $role=$this->baseRepository->getById(Role::class,$id);
         return view('Admin.viewrole',compact('role'));
     }
 
@@ -67,8 +69,8 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        $role=$this->roleRepository->getRoleById($id);
-        $permissions=$this->roleRepository->getPermissions();
+        $role=$this->baseRepository->getById(Role::class,$id);
+        $permissions=$this->baseRepository->all(Permission::class);
      return view('Admin.editrole',compact('role','permissions'));
     }
 
@@ -82,8 +84,8 @@ class RoleController extends Controller
         'permissions'=>['required'],
         ]);
       
-        $this->roleRepository->update($id,$data);
-        $role=$this->roleRepository->getRoleById($id);
+        $this->baseRepository->update(Role::class,$id,$data);
+        $role=$this->baseRepository->getById(Role::class,$id);
         return redirect()->route('role.show',compact('role'));
     }
 
@@ -92,8 +94,7 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        $role=$this->roleRepository->getRoleById($id);
-        $this->roleRepository->delete($role);
+        $this->baseRepository->delete(Role::class,$id);
 
         return redirect()->route('role.index');
 

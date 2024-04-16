@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('/role',RoleController::class);
   
     Route::resource('/leave',LeaveRequestController::class);
+    Route::resource('/project',ProjectController::class);
+
+    Route::get('/assign',[EmployeeController::class,'projectassign'])->name('employee.assign');
+    Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');
+    Route::get('/leave/approved/{id}',[LeaveRequestController::class,'approve'])->name('leave.approve');
+    Route::get('/leave/declined/{id}',[LeaveRequestController::class,'decline'])->name('leave.decline');
  
 });
    

@@ -34,7 +34,6 @@
                                 name="name" value="{{ $user->name }}">
                         </div>
                        
-                              {{-- @if ($emp)   --}}
                                 <div class="form-group">
                                     <label for="" class="form-label">Employee Type:</label>
                                     <select id="" class="form-control" name="emp_type_id">
@@ -46,8 +45,18 @@
                                             @endforeach
                                     </select>
                                 </div>
-                            {{-- @endif --}}
-                      
+
+                                {{-- <div class="form-group">
+                                    <label for="" class="form-label">Project:</label>
+                                    <select id="" class="form-control" name="project" multiple>
+                                        @foreach ($projects as $project)
+                                        <option value="{{ $project->id }}"
+                                            {{ $employee->projects->contains($project->id) ? 'selected': ''}}>
+                                            {{ $project->name }}</option>
+                                            @endforeach
+                                    </select>
+                                </div> --}}
+            
                         <div class="form-group">
                             <label for="email" class="form-label">Email:</label>
                             <input type="email" class="form-control" id="email" placeholder="Enter email"

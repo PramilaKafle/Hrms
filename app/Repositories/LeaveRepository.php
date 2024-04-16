@@ -14,18 +14,6 @@ use Illuminate\Support\Facades\Auth;
 class LeaveRepository implements LeaveRepositoryInterface
 {
 
-    public function all()
-    {
-
-        return LeaveRequest::all();
-    }
-
-    public function getleaveById( string $id)
-    {
-       
-        return LeaveRequest::findOrFail($id);
-    
-    }
     public function getLeaveByEmpId()
     {
         $user=auth()->user();
@@ -38,6 +26,17 @@ class LeaveRepository implements LeaveRepositoryInterface
         return LeaveRequest::all();
        
     }
+
+    public function getUserByEmpId()
+{
+    $empidsonleave = LeaveRequest::pluck('emp_id')->toArray(); // Get all emp_ids from LeaveRequest
+    $users = User::whereHas('emp_types', function ($query) use ($empidsonleave) {
+        $query->whereIn('employees.id', $empidsonleave); 
+    })->get();
+  
+   
+    return $users;
+}
 
     public function calculateRemainingLeaves()
     {
@@ -88,24 +87,6 @@ class LeaveRepository implements LeaveRepositoryInterface
  
     }
 
-public function getUserByEmpId()
-{
-    $empidsonleave = LeaveRequest::pluck('emp_id')->toArray(); // Get all emp_ids from LeaveRequest
-    $users = User::whereHas('emp_types', function ($query) use ($empidsonleave) {
-        $query->whereIn('employees.id', $empidsonleave); 
-    })->get();
-  
-   
-    return $users;
-}
 
 
-
-
-
-    public function delete($id)
-    {
-       $leave= LeaveRequest::findOrFail($id);
-       $leave->delete();
-    }
 }

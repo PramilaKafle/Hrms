@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Interfaces\BaseRepositoryInterface;
 use App\Interfaces\LeaveRepositoryInterface;
-use App\Interfaces\EmployeeRepositoryInterface;
+
 use Illuminate\Support\Facades\Auth;
 use App\Models\Employee;
+use App\Models\LeaveRequest;
 
 class LeaveRequestController extends Controller
 {
@@ -15,19 +16,21 @@ class LeaveRequestController extends Controller
      * Display a listing of the resource.
      */
 
+     private BaseRepositoryInterface $baseRepository;
      private LeaveRepositoryInterface $leaveRepository;
-     private EmployeeRepositoryInterface $employeeRepository;
+    
 
-     public function __construct( LeaveRepositoryInterface $leaveRepository,EmployeeRepositoryInterface $employeeRepository)
+     public function __construct( BaseRepositoryInterface $baseRepository,LeaveRepositoryInterface $leaveRepository)
      {
+        $this->baseRepository= $baseRepository;
       $this->leaveRepository=$leaveRepository;
-      $this->employeeRepository=$employeeRepository;
+    
      }
     public function index()
     {
-       $users=  $this->leaveRepository->getUserByEmpId();
+       $users= $this->leaveRepository->getUserByEmpId();
        $leaves=$this->leaveRepository->getLeaveByEmpId();
-       $employee=$this->employeeRepository->all();
+       $employee=$this->baseRepository->all(Employee::class);
 
       $remainingleavedays= $this->leaveRepository->calculateRemainingLeaves();
  
@@ -82,12 +85,25 @@ class LeaveRequestController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+   public function approve($id)
+   {
+    $leave=$this->baseRepository->getById(LeaveRequest::class,$id);
+    $leave->status='Approved';
+    $leave->save();
+    return redirect()->route('leave.index');
+
+   }
+   public function decline($id)
+   {
+    $leave=$this->baseRepository->getById(LeaveRequest::class,$id);
+    $leave->status='declined';
+    $leave->save();
+    return redirect()->route('leave.index');
+
+   }
     public function destroy(string $id)
     {
-        $this->leaveRepository->delete($id);
+        $this->baseRepository->delete(LeaveRequest::class,$id);
         return redirect()->route('leave.index');
     }
 }

@@ -20,8 +20,10 @@
                     </div>
                     <div class="col-md-6  d-flex justify-content-end">
 
-                        <a class="btn btn-success " href="{{ route('employee.create') }}">Create Employee</a>
-
+                        <a class="btn btn-success  mx-2" href="{{ route('employee.create') }}">Create Employee</a>
+                        
+                        <a class="btn btn-success" href="{{ route('employee.assign') }}">Assign Project</a>
+                        
                     </div>
                 </div>
             </div>
@@ -32,6 +34,7 @@
                             <th scope="col" style="width: 10%">User_id</th>
                             <th scope="col" style="width: 10%">Name</th>
                             <th scope="col" style="width: 10%">Email</th>
+                            <th scope="col" style="width: 15%">Project Assigned</th>
                             <th scope="col" style="width: 10%">Employee_id</th>
                             <th scope="col" style="width: 10%"> Employee_type</th>
 
@@ -44,10 +47,26 @@
                                 <th scope="row">{{ $employee->id }}</th>
                                 <td>{{ $employee->name }}</td>
                                 <td>{{ $employee->email }}</td>
+                                
                                 @foreach ($employee->emp_types as $emp)
+                                
                                     @php
                                         $matchedEmpIds = $empid->where('user_id', $employee->id);
+                                        $projectNames = '';
                                     @endphp
+                                     <td> 
+                                     @foreach ($matchedEmpIds as  $matchedEmpId )
+                                     @foreach($matchedEmpId->projects as $project)
+                                     
+                                    
+                                        {{ $project->name }}
+                                        @if (!$loop->last)
+                                           ,
+                                    @endif
+                                     @endforeach
+                                    
+                                     @endforeach
+                                    </td>
                                     <td>{{ $matchedEmpIds->implode('id', ', ') }}</td>
                                     <td>{{ $emp->Name }}</td>
                                 @endforeach

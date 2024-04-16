@@ -6,33 +6,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Employee;
-use App\Interfaces\UserRepositoryInterface;
-use App\Interfaces\EmployeeRepositoryInterface;
+use App\Interfaces\BaseRepositoryInterface;
 
 class HomeController extends Controller
 {
-    private UserRepositoryInterface $userRepository;
-    private EmployeeRepositoryInterface $employeeRepository;
+    private BaseRepositoryInterface $baseRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository, EmployeeRepositoryInterface $employeeRepository)
+    public function __construct(BaseRepositoryInterface $baseRepository)
     {
-   $this->userRepository=$userRepository;
-   $this->employeeRepository=$employeeRepository;
+   $this->baseRepository=$baseRepository;
+   
     }
  
     public function redirect()
 {
-    // $users=Auth::user();
-    // if($users->emptypes()->exists())
-    // {
-    //     return view('Employee.home');
-    // }
-    // else{
-        // $user=Auth::user();
 
-       $allusers=$this->userRepository->all();
+       $allusers=$this->baseRepository->all(User::class);
    
-      $employees = $this->employeeRepository->all();
+      $employees = $this->baseRepository->all(Employee::class);
     
         
         return view('Admin.dashboard',compact('employees','allusers'));

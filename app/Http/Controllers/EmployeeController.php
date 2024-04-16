@@ -91,8 +91,8 @@ class EmployeeController extends Controller
         $user=$this->baseRepository->getById(User::class,$id);
         $employeetypes =$this->baseRepository->all(Emp_type::class);
         $projects =$this->baseRepository->all(Project::class);
-
-        return view('Admin.edit',compact('user','employeetypes','projects'));
+        $employees=$this->baseRepository->all(Employee::class);
+        return view('Admin.edit',compact('user','employeetypes','projects','employees'));
 
 
        

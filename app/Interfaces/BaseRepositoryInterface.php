@@ -9,14 +9,12 @@ Interface BaseRepositoryInterface{
 
     public function getById($model,string $id);
     public function update($model ,string $id, array $data);
-
+     public function delete($model,$id);
+     
     public function getUserOnly();
-    public function getEmployeeOnly();
- 
+    public function getEmployeeOnly(); 
     public function getuserswithRoles();
-    public function delete($model,$id);
-
-    // public function getUserByEmpId();
-    // public function getLeaveByEmpId();
-    // public function calculateRemainingLeaves();
+    public function getUserByEmpId();
+    public function getLeaveByEmpId();
+    public function calculateRemainingLeaves();
 }

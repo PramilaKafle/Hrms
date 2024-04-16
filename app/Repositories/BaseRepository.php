@@ -6,8 +6,9 @@ use App\Interfaces\BaseRepositoryInterface;
 use App\Models\User;
 use App\Models\Employee;
 use App\Models\Emp_type;
+use App\Models\LeaveRequest;
 
-use App\Models\LeaveRepository;
+
 use Illuminate\Support\Facades\DB;
 use File;
 use Carbon\Carbon;
@@ -28,7 +29,28 @@ public function store($model ,array $data)
 {
     DB::beginTransaction();
     try{
-    
+        if(isset($data['start_date'])&&($data['end_date']))
+    {
+        $remainingleaves=$this->calculateRemainingLeaves();
+
+        $userid=auth()->user()->id;
+       $empid=Employee::where('user_id',$userid)->first()->id;
+
+      
+
+       $start = Carbon::Parse($data['start_date']);
+       
+       $end = Carbon::Parse($data['end_date']);
+       $leaveDays = $end->diffInDays($start) + 1;
+
+        if ($leaveDays >  $remainingleaves) {
+            return redirect()->back()->with('error', 'Insufficient LeaveDays. You have ' . $remainingleaves . ' days remaining.');
+        }
+        else{
+            $data['emp_id']=$empid;
+            $data['applied_for']= $leaveDays;
+        }
+    }
             $record= $model::create($data);
    
        if(isset($data['roles']))
@@ -53,6 +75,8 @@ public function store($model ,array $data)
        DB::commit();
        return redirect()->back()->with('success', 'Role created successfully');
     }
+
+
     DB::commit();
   
        
@@ -146,11 +170,34 @@ public function calculateRemainingLeaves()
     return  $remainingleaves;
    }
 
-  
-
-
-
 }
+
+
+
+public function getLeaveByEmpId()
+{
+    $user=auth()->user();
+    if($user->emp_types->isNotEmpty())
+    {
+        $userid=$user->id;
+        $empid=Employee::where('user_id',$userid)->first()->id;
+        return LeaveRequest::where('emp_id',$empid)->get();
+    }
+    return LeaveRequest::all();
+   
+}
+
+public function getUserByEmpId()
+{
+$empidsonleave = LeaveRequest::pluck('emp_id')->toArray(); // Get all emp_ids from LeaveRequest
+$users = User::whereHas('emp_types', function ($query) use ($empidsonleave) {
+    $query->whereIn('employees.id', $empidsonleave); 
+})->get();
+
+
+return $users;
+}
+
 public function delete($model,$id)
 {
      $record = $model::find($id);

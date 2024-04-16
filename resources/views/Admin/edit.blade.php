@@ -48,11 +48,12 @@
 
                                 {{-- <div class="form-group">
                                     <label for="" class="form-label">Project:</label>
-                                    <select id="" class="form-control" name="project" multiple>
+                                    <select id="" class="form-control" name="project[]" multiple>
                                         @foreach ($projects as $project)
                                         <option value="{{ $project->id }}"
                                             {{ $employee->projects->contains($project->id) ? 'selected': ''}}>
                                             {{ $project->name }}</option>
+                                            
                                             @endforeach
                                     </select>
                                 </div> --}}

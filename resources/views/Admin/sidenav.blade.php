@@ -33,7 +33,7 @@
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-user"></i></div>
                 View Profile
             </a>
-            <a class="nav-link" href="charts.html">
+            <a class="nav-link" href="{{route('timesheet.index')}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
                 Timesheet
             </a>

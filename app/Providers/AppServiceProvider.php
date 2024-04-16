@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\EmployeeTypeRepository;
 use App\Repositories\RoleRepository;
-use App\Repositories\PermissionRepository;
+
 use App\Repositories\LeaveRepository;
 
 use App\Interfaces\BaseRepositoryInterface;
@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
      
         
         $this->app->bind(BaseRepositoryInterface::class,BaseRepository::class);
+   
       
         $this->app->bind(LeaveRepositoryInterface::class,LeaveRepository::class);
     }

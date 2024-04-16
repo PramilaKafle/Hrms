@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TimesheetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::middleware('auth')->group(function () {
   
     Route::resource('/leave',LeaveRequestController::class);
     Route::resource('/project',ProjectController::class);
+    Route::resource('/timesheet',TimesheetController::class);
 
     Route::get('/assign',[EmployeeController::class,'projectassign'])->name('employee.assign');
     Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Interfaces\BaseRepositoryInterface;
-use App\Interfaces\LeaveRepositoryInterface;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Employee;
@@ -17,22 +16,22 @@ class LeaveRequestController extends Controller
      */
 
      private BaseRepositoryInterface $baseRepository;
-     private LeaveRepositoryInterface $leaveRepository;
+    
     
 
-     public function __construct( BaseRepositoryInterface $baseRepository,LeaveRepositoryInterface $leaveRepository)
+     public function __construct( BaseRepositoryInterface $baseRepository)
      {
         $this->baseRepository= $baseRepository;
-      $this->leaveRepository=$leaveRepository;
+     
     
      }
     public function index()
     {
-       $users= $this->leaveRepository->getUserByEmpId();
-       $leaves=$this->leaveRepository->getLeaveByEmpId();
+       $users= $this->baseRepository->getUserByEmpId();
+       $leaves=$this->baseRepository->getLeaveByEmpId();
        $employee=$this->baseRepository->all(Employee::class);
 
-      $remainingleavedays= $this->leaveRepository->calculateRemainingLeaves();
+      $remainingleavedays= $this->baseRepository->calculateRemainingLeaves();
  
         return view('Employee.leave',compact('leaves','users','employee','remainingleavedays'));
     }
@@ -57,7 +56,7 @@ class LeaveRequestController extends Controller
             'description'=>['required']
 
         ]);
-        $this->leaveRepository->store($data);
+        $this->baseRepository->store(LeaveRequest::class,$data);
         return redirect()->route('leave.index');
     }
 

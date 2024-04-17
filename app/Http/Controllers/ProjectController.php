@@ -5,20 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\User;
-use App\Interfaces\BaseRepositoryInterface;
+// use App\Interfaces\BaseRepositoryInterface;
+use App\Repositories\ProjectRepository;
+
 class ProjectController extends Controller
 {
-    private BaseRepositoryInterface $baseRepository;
+    private ProjectRepository $projectRepository;
 
-    public function __construct( BaseRepositoryInterface $baseRepository)
+    public function __construct( ProjectRepository $projectRepository)
     {
       
-       $this->baseRepository= $baseRepository;
+       $this->projectRepository= $projectRepository;
     }
     public function index()
 
     {
-        $projects = $this->baseRepository->all(Project::class);
+        $projects = $this->projectRepository->all();
         return view('Admin.project',compact('projects'));
     }
 
@@ -38,7 +40,7 @@ class ProjectController extends Controller
         $data=$request->validate([
             'name' => ['required','string','max:255' ],
         ]);
-        $this->baseRepository->store(Project::class,$data);
+        $this->projectRepository->store($data);
         return redirect()->route('project.index');
     }
 
@@ -69,7 +71,7 @@ class ProjectController extends Controller
    
     public function destroy(string $id)
     {
-        $this->baseRepository->delete(Project::class,$id);
+        $this->projectRepository->delete($id);
         return redirect()->route('project.index');
     }
 }

@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Interfaces\BaseRepositoryInterface;
+// use App\Interfaces\BaseRepositoryInterface;
 use Illuminate\Validation\Rule;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Employee;
+use App\Repositories\UserRepository;
 
 class UserController extends Controller
-{   private BaseRepositoryInterface $userRepository;
+{   private UserRepository $userRepository;
 
-    public function __construct( BaseRepositoryInterface $userRepository)
+    public function __construct(UserRepository $userRepository)
     {
       
        $this->userRepository= $userRepository;
@@ -35,7 +36,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles=$this->userRepository->all(Role::class);
+        $roles=Role::all();
         return view('Admin.adduser',compact('roles'));
     }
 
@@ -51,7 +52,7 @@ class UserController extends Controller
             'roles'=>[],
             'image'=>[],
         ]);
-        $this->userRepository->store(User::class,$data);
+        $this->userRepository->store($data);
         return redirect()->route('user.index');
     }
 
@@ -61,7 +62,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         //
-          $users=$this->userRepository->getById(User::class,$id);
+          $users=$this->userRepository->getById($id);
           return view('Admin.viewuser',compact('users'));
     }
 
@@ -70,8 +71,8 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user=$this->userRepository->getById(User::class,$id);
-         $roles=$this->userRepository->all(Role::class);
+        $user=$this->userRepository->getById($id);
+         $roles=Role::all();
          return view('Admin.edituser',compact('user','roles'));
     }
 
@@ -80,7 +81,7 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-         $users=$this->userRepository->getById(User::class,$id);
+         $users=$this->userRepository->getById($id);
          $data= $request->validate([
             'name' => ['required','string','max:255' ],
             'email' => ['required','email',
@@ -88,7 +89,7 @@ class UserController extends Controller
             'password' => ['required','min:8'],
             'roles' => ['required'],
         ]);
-         $this->userRepository->update(User::class,$id,$data);
+         $this->userRepository->update($id,$data);
          return redirect()->route('user.index');
 
     }
@@ -98,7 +99,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->userRepository->delete(User::class,$id);
+        $this->userRepository->delete($id);
         return redirect()->route('user.index');
     }
 }

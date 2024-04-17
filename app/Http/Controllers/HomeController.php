@@ -10,20 +10,20 @@ use App\Interfaces\BaseRepositoryInterface;
 
 class HomeController extends Controller
 {
-    private BaseRepositoryInterface $baseRepository;
+//     private BaseRepositoryInterface $baseRepository;
 
-    public function __construct(BaseRepositoryInterface $baseRepository)
-    {
-   $this->baseRepository=$baseRepository;
+//     public function __construct(BaseRepositoryInterface $baseRepository)
+//     {
+//    $this->baseRepository=$baseRepository;
    
-    }
+//     }
  
     public function redirect()
 {
 
-       $allusers=$this->baseRepository->all(User::class);
+       $allusers=User::all();
    
-      $employees = $this->baseRepository->all(Employee::class);
+      $employees =Employee::all();
     
         
         return view('Admin.dashboard',compact('employees','allusers'));

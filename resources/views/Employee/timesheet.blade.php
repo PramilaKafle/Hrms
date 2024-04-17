@@ -8,20 +8,7 @@
 </ol>
 
 <div class="main-content mt-4">
- 
-    <div class="card mx-6">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-md-6">
-                    <a class="btn btn-success mx-1" href="{{route('timesheet.create')}}">Add Timesheet</a>
-                </div>
-              
-            </div>
-        </div>
-        <div class="card-body">
-            
-                   
-        </div>
-    </div>
+ <div></div>
+    
 </div>
 @endsection

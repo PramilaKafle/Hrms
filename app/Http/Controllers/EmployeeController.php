@@ -12,7 +12,7 @@ use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Interfaces\BaseRepositoryInterface;
-
+use App\Repositories\UserRepository;
 
 
 class EmployeeController extends Controller
@@ -20,11 +20,11 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    private BaseRepositoryInterface $baseRepository;
+    private UserRepository $userRepository;
    
-     public function __construct( BaseRepositoryInterface $baseRepository)
+     public function __construct(UserRepository $userRepository)
      {
-        $this->baseRepository= $baseRepository;
+        $this->userRepository= $userRepository;
         $this->middleware('CheckPermission:create')->except('index','show');
          $this->middleware('CheckPermission:view')->only(['index','show']);
          $this->middleware('CheckPermission:delete')->only('destroy');
@@ -34,9 +34,9 @@ class EmployeeController extends Controller
     public function index()
     {
 
-        $employees=$this->baseRepository->getEmployeeOnly();
-        $empid =$this->baseRepository->all(Employee::class);
-        $project=$this->baseRepository->all(Project::class);
+        $employees=$this->userRepository->getEmployeeOnly();
+        $empid =Employee::all();
+        $project=Project::all();
         return view('Admin.view',compact('employees','empid','project'));
        
     }
@@ -49,8 +49,8 @@ class EmployeeController extends Controller
     public function create()
 
     {
-        $employeetypes =$this->baseRepository->all(Emp_type::class);
-        $projects=$this->baseRepository->all(Project::class);
+        $employeetypes =Emp_type::all();
+        $projects=Project::all();
         return view('Admin.employee',compact('employeetypes','projects'));
     }
 
@@ -67,7 +67,7 @@ class EmployeeController extends Controller
             'emp_type_id' => ['required'],
         ]); 
        //dd($data);
-       $userid = $this->baseRepository->store(User::class,$data);
+       $userid = $this->userRepository->store($data);
         return   redirect()->route('employee.index');
     }
 
@@ -77,8 +77,8 @@ class EmployeeController extends Controller
     public function show(string $id)
     {
         
-        $user=$this->baseRepository->getById(User::class,$id);
-        $employee=$this->baseRepository->findByUserId($id);
+        $user=$this->userRepository->getById($id);
+        $employee=$this->userRepository->findByUserId($id);
         return view('Admin.show',compact('user','employee'));
        
     }
@@ -88,10 +88,10 @@ class EmployeeController extends Controller
      */
     public function edit(string $id)
     {
-        $user=$this->baseRepository->getById(User::class,$id);
-        $employeetypes =$this->baseRepository->all(Emp_type::class);
-        $projects =$this->baseRepository->all(Project::class);
-        $employees=$this->baseRepository->all(Employee::class);
+        $user=$this->userRepository->getById($id);
+        $employeetypes =Emp_type::all();
+        $projects =Project::all();
+        $employees=Employee::all();
         return view('Admin.edit',compact('user','employeetypes','projects','employees'));
 
 
@@ -105,7 +105,7 @@ class EmployeeController extends Controller
     {
         //
 
-        $user=$this->baseRepository->getById(User::class,$id);
+        $user=$this->userRepository->getById($id);
        // $employee=$this->employeeRepository->findByUserId($id);
 
         $data= $request->validate([
@@ -117,15 +117,15 @@ class EmployeeController extends Controller
             
         ]);
        
-        $this->baseRepository->update(User::class,$id,$data);
+        $this->userRepository->update($id,$data);
         return   redirect()->route('employee.index');
     }
 
     public function projectassign()
     {
-     $employees=$this->baseRepository->getEmployeeOnly();
+     $employees=$this->userRepository->getEmployeeOnly();
      //dd($employees);
-     $projects =$this->baseRepository->all(Project::class);
+     $projects =Project::all();
      return view('Employee.project',compact('employees','projects'));
     }
 
@@ -144,7 +144,7 @@ class EmployeeController extends Controller
     {
         //$user=$this->baseRepository->getById(User::class,$id);
        
-        $this->baseRepository->delete( User::class,$id);
+        $this->userRepository->delete($id);
         return redirect()->route('employee.index');
     }
 }

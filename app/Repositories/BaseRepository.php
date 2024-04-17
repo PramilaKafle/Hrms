@@ -7,25 +7,29 @@ use App\Models\User;
 use App\Models\Employee;
 use App\Models\Emp_type;
 use App\Models\LeaveRequest;
-
+use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Facades\DB;
 use File;
 use Carbon\Carbon;
 
 class BaseRepository implements BaseRepositoryInterface{
+    protected $model; //protected
+    //constructor
+    public function __construct(Model $model){
+        $this->model = $model;
+    }
 
-
-public function all($model)
+public function all()
 {
- return $model::all();
+ return $this->model::all();
 }
-public function getById( $model ,string $id)
+public function getById(string $id)
 {
-   return $model::findOrFail($id);
+   return $this->model::findOrFail($id);
 }
 
-public function store($model ,array $data)
+public function store(array $data)
 {
     DB::beginTransaction();
     try{
@@ -51,7 +55,7 @@ public function store($model ,array $data)
             $data['applied_for']= $leaveDays;
         }
     }
-            $record= $model::create($data);
+            $record= $this->model::create($data);
    
        if(isset($data['roles']))
        {
@@ -88,14 +92,14 @@ public function store($model ,array $data)
   
 }
 
-public function update( $model ,string $id, array $data)
+public function update(string $id, array $data)
 {
     DB::beginTransaction();
 
     try {
        
 
-        $user = $model::findOrFail($id);
+        $user = $this->model::findOrFail($id);
         $user->update($data);
         DB::commit();
         
@@ -198,9 +202,9 @@ $users = User::whereHas('emp_types', function ($query) use ($empidsonleave) {
 return $users;
 }
 
-public function delete($model,$id)
+public function delete($id)
 {
-     $record = $model::find($id);
+     $record = $this->model::find($id);
      if(isset($record->status))
      {
         if($record->status === 'approved'|| $record->status == 'declined')

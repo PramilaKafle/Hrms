@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Interfaces\BaseRepositoryInterface;
-
+use App\Repositories\LeaveRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
@@ -15,23 +15,24 @@ class LeaveRequestController extends Controller
      * Display a listing of the resource.
      */
 
-     private BaseRepositoryInterface $baseRepository;
+    //  private BaseRepositoryInterface $baseRepository;
     
-    
+    private LeaveRepository $leaveRepository;
 
-     public function __construct( BaseRepositoryInterface $baseRepository)
+     public function __construct(LeaveRepository $leaveRepository)
      {
-        $this->baseRepository= $baseRepository;
-     
+       
+        $this->leaveRepository= $leaveRepository;
     
      }
     public function index()
     {
-       $users= $this->baseRepository->getUserByEmpId();
-       $leaves=$this->baseRepository->getLeaveByEmpId();
-       $employee=$this->baseRepository->all(Employee::class);
+       $users= $this->leaveRepository->getUserByEmpId();
+       $leaves=$this->leaveRepository->getLeaveByEmpId();
+      
+       $employee=Employee::all();
 
-      $remainingleavedays= $this->baseRepository->calculateRemainingLeaves();
+      $remainingleavedays= $this->leaveRepository->calculateRemainingLeaves();
  
         return view('Employee.leave',compact('leaves','users','employee','remainingleavedays'));
     }
@@ -56,7 +57,7 @@ class LeaveRequestController extends Controller
             'description'=>['required']
 
         ]);
-        $this->baseRepository->store(LeaveRequest::class,$data);
+        $this->leaveRepository->store($data);
         return redirect()->route('leave.index');
     }
 
@@ -86,7 +87,7 @@ class LeaveRequestController extends Controller
 
    public function approve($id)
    {
-    $leave=$this->baseRepository->getById(LeaveRequest::class,$id);
+    $leave=$this->leaveRepository->getById($id);
     $leave->status='Approved';
     $leave->save();
     return redirect()->route('leave.index');
@@ -94,7 +95,7 @@ class LeaveRequestController extends Controller
    }
    public function decline($id)
    {
-    $leave=$this->baseRepository->getById(LeaveRequest::class,$id);
+    $leave=$this->leaveRepository->getById($id);
     $leave->status='declined';
     $leave->save();
     return redirect()->route('leave.index');
@@ -102,7 +103,7 @@ class LeaveRequestController extends Controller
    }
     public function destroy(string $id)
     {
-        $this->baseRepository->delete(LeaveRequest::class,$id);
+        $this->leaveRepository->delete($id);
         return redirect()->route('leave.index');
     }
 }

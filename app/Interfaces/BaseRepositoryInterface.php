@@ -3,13 +3,13 @@ namespace App\Interfaces;
 
 Interface BaseRepositoryInterface{
 
-    public function all($model);
+    public function all();
 
-    public function store($model,array $data);
+    public function store(array $data);
 
-    public function getById($model,string $id);
-    public function update($model ,string $id, array $data);
-     public function delete($model,$id);
+    public function getById(string $id);
+    public function update(string $id, array $data);
+     public function delete($id);
      
     public function getUserOnly();
     public function getEmployeeOnly(); 

@@ -37,9 +37,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                    $sl=0;
+                @endphp
                     @foreach($roles as $role)
                     <tr>
-                    <th scope="row">{{ $role->id }}</th>
+                       
+                    <th scope="row">{{++$sl}}</th>
                     <td>{{$role->name}}</td>
                     <td>
                         <div class="d-flex">
@@ -63,7 +67,7 @@
                     @endforeach  
                 </tbody>
             </table>
-
+{{$roles->links()}}
         </div>
     </div>
 </div>

@@ -26,7 +26,7 @@ class HomeController extends Controller
       $employees =Employee::all();
     
         
-        return view('Admin.dashboard',compact('employees','allusers'));
+        return view('Home.dashboard',compact('employees','allusers'));
     }
 
 

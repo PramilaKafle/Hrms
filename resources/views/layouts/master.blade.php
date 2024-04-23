@@ -8,14 +8,15 @@
         <meta name="author" content="" />
         <title>Dashboard </title>
         <link href="{{asset('Home/css/styles.css')}}" rel="stylesheet" />
+        <link href="{{asset('Home/css/calendar.css')}}" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
-        @include('Admin.navbar')
+        @include('Home.navbar')
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
 
-                @include('Admin.sidenav')
+                @include('Home.sidenav')
             </div>
             <div id="layoutSidenav_content">
                
@@ -24,7 +25,7 @@
                     </div>
                
               
-                @include('Admin.footer')
+                @include('Home.footer')
             </div>
         </div>
         
@@ -36,6 +37,7 @@
         <script src="Home/assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="Home/js/datatables-simple-demo.js"></script>
+        <script src="{{asset('Home/js/calendar.js')}}"></script>
 
         <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -43,7 +45,9 @@
 <!-- jQuery UI library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
-       
-    </body>
+{{-- full calendar library --}}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+</body>
 </html>

@@ -4,14 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Employee;
+use App\Repositories\TimesheetRepository;
+use App\Repositories\EmployeeRepository;
+use Carbon\carbon;
+
 class TimesheetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    private EmployeeRepository  $employeeRepository;
+    public function __construct(EmployeeRepository  $employeeRepository)
     {
-        return view('Employee.timesheet');
+       $this->employeeRepository=$employeeRepository;
+    }
+    public function index()
+    // {  $date= Carbon::now();
+       {
+       
+        $user=auth()->user();
+        $employees=$this->employeeRepository->findByUserId($user->id);
+        
+        //dd($timesheet);
+        return view('Timesheet.index',compact('employees'));
     }
 
     /**
@@ -19,7 +32,7 @@ class TimesheetController extends Controller
      */
     public function create()
     {
-        return view('Employee.addtimesheet');
+        // return view('Employee.addtimesheet');
     }
 
     /**
@@ -61,4 +74,6 @@ class TimesheetController extends Controller
     {
         //
     }
+
+
 }

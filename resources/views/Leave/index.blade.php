@@ -7,10 +7,9 @@
         <li class="breadcrumb-item active">Leave Information</li>
     </ol>
     <div class="main-content mt-4">
-        @if ($message=@session('error'))
-        <div class="alert alert-danger">{{ $message }}</div>
-       
-    @endif
+        @if ($message = @session('error'))
+            <div class="alert alert-danger">{{ $message }}</div>
+        @endif
         <div class="card">
             @cannot('hasEmployeeType')
                 <table class="table">
@@ -21,7 +20,6 @@
                             <th scope="col" style="width: 10%">Employee Name</th>
                             <th scope="col" style="width: 10%">Start Date</th>
                             <th scope="col" style="width: 10%">End Date</th>
-                           
                             <th scope="col" style="width: 10%">Action</th>
 
 
@@ -33,13 +31,17 @@
 
                                 <td>{{ $leave->id }}</td>
                                 <td>{{ $leave->created_at->format('Y-m-d') }}</td>
+                              
                                 <td>
                                     @foreach ($users as $user)
                                         @php
                                             $userid = $user->id;
+                                          
                                             $matcheemployeedid = $employee->where('user_id', $userid)->first();
+                                            //@dd($matcheemployeedid);
                                         @endphp
-                                        @if ($matcheemployeedid->id == $leave->emp_id)
+                                     
+                                        @if ($employee && $matcheemployeedid && $matcheemployeedid->id == $leave->emp_id)
                                             {{ $user->name }}
                                         @endif
                                     @endforeach
@@ -50,32 +52,30 @@
                                 <td>
                                     <div class="d-flex">
 
-                                        <a class="btn-sm btn-success btn mx-2"
-                                            href="{{route('leave.approve',$leave->id)}}">
-                                            @if($leave->status == 'approved')
-                                            Approved
+                                        <a class="btn-sm btn-success btn mx-2" href="{{ route('leave.approve', $leave->id) }}">
+                                            @if ($leave->status == 'approved')
+                                                Approved
                                             @else
-                                            Approve 
+                                                Approve
                                             @endif
-                                         
-                                    </a>
-            
-                                            <a class="btn-sm btn-danger btn mx-2"
-                                            href="{{route('leave.decline',$leave->id)}}">
-                                            @if($leave->status == 'declined')
-                                            Declined
+                                        </a>
+
+                                        <a class="btn-sm btn-danger btn mx-2" href="{{ route('leave.decline', $leave->id) }}">
+                                            @if ($leave->status == 'declined')
+                                                Declined
                                             @else
-                                            Decline 
+                                                Decline
                                             @endif
-                                         </a>
-            
-                                    </div> 
+                                        </a>
+
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
 
                     </tbody>
                 </table>
+                {{$leaves->links()}}
             @else
                 <div class="card-header">
                     <div class="row">
@@ -83,10 +83,11 @@
                             <a href="{{ route('leave.create') }}" class="btn btn-success">Request Leave</a>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
-                            <h1 class="mb-4" style="color:#e94e3d; font-weight:bold">  Remaining LeaveDays: {{$remainingleavedays}}</h1> 
+                            <h1 class="mb-4" style="color:#e94e3d; font-weight:bold"> Remaining LeaveDays:
+                                {{ $remainingleavedays }}</h1>
                         </div>
-                        
-                       
+
+
                     </div>
                 </div>
                 <div class="card-body">
@@ -103,14 +104,13 @@
                         </thead>
                         <tbody>
                             @foreach ($leaves as $leave)
-                            
                                 <tr>
 
                                     <td>{{ $leave->id }}</td>
                                     <td>{{ $leave->start_date }}</td>
                                     <td>{{ $leave->end_date }}</td>
-                                    <td>{{$leave->applied_for}}</td>
-                                    <td>{{$leave->status}}</td>
+                                    <td>{{ $leave->applied_for }}</td>
+                                    <td>{{ $leave->status }}</td>
                                     <td>
                                         <form action="{{ route('leave.destroy', $leave->id) }}" method="POST">
                                             @csrf
@@ -118,16 +118,16 @@
                                             <button class="btn-sm btn-danger btn">Cancel Request</button>
                                         </form>
                                     </td>
-                                   
+
                                 </tr>
-                               
                             @endforeach
-                           
+
                         </tbody>
                     </table>
+                    {{$leaves->links()}}
                 </div>
             @endcannot
-
+         
         </div>
 
     </div>

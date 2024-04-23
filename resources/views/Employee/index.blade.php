@@ -37,7 +37,7 @@
                             <th scope="col" style="width: 15%">Project Assigned</th>
                             <th scope="col" style="width: 10%">Employee_id</th>
                             <th scope="col" style="width: 10%"> Employee_type</th>
-
+                           
                             <th scope="col" style="width: 10%">Action</th>
                         </tr>
                     </thead>
@@ -56,6 +56,7 @@
                                     @endphp
                                      <td> 
                                      @foreach ($matchedEmpIds as  $matchedEmpId )
+                                     @if($matchedEmpId->projects->isNotEmpty())
                                      @foreach($matchedEmpId->projects as $project)
                                      
                                     
@@ -64,7 +65,9 @@
                                            ,
                                     @endif
                                      @endforeach
-                                    
+                                    @else
+                                    Not Assigned
+                                    @endif
                                      @endforeach
                                     </td>
                                     <td>{{ $matchedEmpIds->implode('id', ', ') }}</td>
@@ -93,6 +96,7 @@
                         @endforeach
                     </tbody>
                 </table>
+               {{$employees->links()}}
 
             </div>
         </div>

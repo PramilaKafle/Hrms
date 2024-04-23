@@ -22,12 +22,4 @@ window.addEventListener('DOMContentLoaded', event => {
             localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
         });
     }
-
-});
-$(document).ready(function(){
-    $('#start_date').datepicker({
-        format: 'mm-dd-yyyy',
-        autoclose: true,
-        title:'pick Date'
-    });
 });

@@ -28,7 +28,7 @@ class UserController extends Controller
     public function index()
     {
         $users=$this->userRepository-> getUserOnly();
-     return view('Admin.user',compact('users'));
+     return view('User.index',compact('users'));
     }
 
     /**
@@ -37,7 +37,7 @@ class UserController extends Controller
     public function create()
     {
         $roles=Role::all();
-        return view('Admin.adduser',compact('roles'));
+        return view('User.model',compact('roles'));
     }
 
     /**
@@ -63,7 +63,7 @@ class UserController extends Controller
     {
         //
           $users=$this->userRepository->getById($id);
-          return view('Admin.viewuser',compact('users'));
+          return view('User.view',compact('users'));
     }
 
     /**
@@ -73,7 +73,7 @@ class UserController extends Controller
     {
         $user=$this->userRepository->getById($id);
          $roles=Role::all();
-         return view('Admin.edituser',compact('user','roles'));
+         return view('User.model',compact('user','roles'));
     }
 
     /**

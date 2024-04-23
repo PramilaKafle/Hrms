@@ -4,7 +4,9 @@
     <h1 class="mt-4">User Management</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="{{ url('redirect') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Add User</li>
+        <li class="breadcrumb-item active">
+            @if(isset($user)) Edit User @else Add User @endif
+        </li>
     </ol>
     <div class="main-content mt-4">
         @if ($errors->any())
@@ -28,11 +30,13 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-sm-8">
-
-
-                            <form class="form-horizontal " action="{{ route('user.store') }}" method="POST"
-                                enctype="multipart/form-data">
+                            <form class="form-horizontal " 
+                           @if(isset($user)) action="{{route('user.update',$user->id)}}" 
+                           @else action="{{ route('user.store') }}" 
+                           @endif
+                           method="POST" enctype="multipart/form-data">
                                 @csrf
+                                @if(isset($user)) @method('PUT') @endif
                                 <div class="form-group row mb-4">
                                     <label class="control-label col-sm-2 " for="name">Image:</label>
                                     <div class="col-sm-8">
@@ -42,13 +46,13 @@
                                 <div class="form-group row mb-4">
                                     <label class="control-label col-sm-2 " for="name">Name:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="name" name="name">
+                                        <input type="text" class="form-control" id="name" name="name"  @if(isset($user)) value="{{$user->name}}" @endif>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-4">
                                     <label class="control-label col-sm-2 " for="email">Email:</label>
                                     <div class="col-sm-8">
-                                        <input type="email" class="form-control" id="email" name="email">
+                                        <input type="email" class="form-control" id="email" name="email"  @if(isset($user)) value="{{$user->email}}" @endif>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-4">
@@ -63,7 +67,8 @@
                                         <select name="roles" id="" class="form-control">
                                             <option value="">Select</option>
                                             @foreach ($roles as $role)
-                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                <option  @if(isset($user))  {{$user->roles->contains($role->id) ? 'selected' :''}} @endif 
+                                                    value="{{ $role->id }}">{{ $role->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

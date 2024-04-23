@@ -37,10 +37,10 @@
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
                 Timesheet
             </a>
-            <a class="nav-link" href="charts.html">
+            {{-- <a class="nav-link" href="charts.html">
                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                 Expenses
-            </a>
+            </a> --}}
          
          
             @endcannot

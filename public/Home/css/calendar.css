@@ -1,0 +1,39 @@
+Calendar container
+.calendar {
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    max-width: 500px; 
+    margin: 0 auto;
+}
+
+.calender-header
+ {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.month {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.year {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-left: 5px;
+}
+.days{
+    display:grid;
+   
+}
+
+.day-label{
+text-align: center;
+}
+
+
+
+  
+

@@ -36,6 +36,8 @@
                     <td>{{$project->name}}</td>
                     <td>
                         <div class="d-flex">
+                            <a class="btn-sm btn-success btn mx-2"
+                            href="{{ route('project.edit', $project->id) }}">Edit </a>
                             <form action="{{ route('project.destroy', $project->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
@@ -50,7 +52,7 @@
                 </tbody>
     
             </table>
-
+            {{ $projects->links() }}
         </div>
     </div>
 </div>

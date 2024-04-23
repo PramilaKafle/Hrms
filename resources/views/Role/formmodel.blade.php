@@ -3,7 +3,13 @@
     <h1 class="mt-4">Role Management</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="{{ url('redirect') }}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Add New Role</li>
+        <li class="breadcrumb-item active">
+          @if(isset($role))
+            Edit Role
+            @else
+            Add New Role
+           @endif
+        </li>
     </ol>
     <div class="main-content mt-4">
         @if ($errors->any())
@@ -24,12 +30,22 @@
                 </div>
             </div>
             <div class="card-body ">
-                <form class="form-horizontal " action="{{route('role.store')}}" method="POST" enctype="multipart/form-data">
+                <form class="form-horizontal "     
+                @if(isset($role))
+                action="{{route('role.update',$role->id)}}"
+                @else
+                action="{{route('role.store')}}" 
+                @endif
+                method="POST" enctype="multipart/form-data">
                     @csrf
+                    @if(isset($role))
+                    @method('PUT')
+                    @endif
                     <div class="form-group row mb-4"> 
                         <label class="control-label col-sm-2 " for="name">Name:</label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name"
+                            @if(isset($role)) value="{{$role->name}}" @endif>
                         </div>
                     </div>
                     <div class="form-group row mb-4"> 
@@ -37,7 +53,7 @@
                         <div class="col-sm-5">
                            <select name="permissions[]" id="" class="form-control" multiple>
                             @foreach($permissions as $permission)
-                           <option value="{{$permission->id}}">{{$permission->name}}</option>
+                           <option  @if(isset($role))  {{$role->permissions->contains($permission->id)? 'selected' :''}} @endif value="{{$permission->id}}">{{$permission->name}}</option>
                             @endforeach
                            </select>
                         </div>

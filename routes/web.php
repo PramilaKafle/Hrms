@@ -53,15 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');
     Route::get('/leave/approved/{id}',[LeaveRequestController::class,'approve'])->name('leave.approve');
     Route::get('/leave/declined/{id}',[LeaveRequestController::class,'decline'])->name('leave.decline');
+
  
 });
-   
-
-
-
-
-
-
 
 
 require __DIR__.'/auth.php';

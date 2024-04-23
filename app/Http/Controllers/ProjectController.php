@@ -17,11 +17,12 @@ class ProjectController extends Controller
       
        $this->projectRepository= $projectRepository;
     }
-    public function index()
+    public function index(Request $request)
 
     {
-        $projects = $this->projectRepository->all();
-        return view('Admin.project',compact('projects'));
+        $page = $request->input('page', 1);
+        $projects = $this->projectRepository->all($page);
+        return view('Project.index',compact('projects'));
     }
 
     /**
@@ -29,7 +30,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('Admin.createproject');
+        return view('Project.formmodel');
     }
 
     /**
@@ -49,7 +50,7 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
     }
 
     /**
@@ -57,7 +58,8 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $project=$this->projectRepository->getById($id);
+        return view('Project.formmodel',compact('project'));
     }
 
     /**
@@ -65,7 +67,12 @@ class ProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        
+        $data=$request->validate([
+            'name' => ['required','string','max:255' ],
+        ]);
+        $this->projectRepository->update($id,$data);
+        return redirect()->route('project.index');
     }
   
    

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Interfaces\BaseRepositoryInterface;
 use App\Repositories\LeaveRepository;
+use App\Repositories\EmployeeRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
@@ -18,23 +19,25 @@ class LeaveRequestController extends Controller
     //  private BaseRepositoryInterface $baseRepository;
     
     private LeaveRepository $leaveRepository;
+    private EmployeeRepository $employeeRepository;
 
-     public function __construct(LeaveRepository $leaveRepository)
+     public function __construct(LeaveRepository $leaveRepository,EmployeeRepository $employeeRepository)
      {
        
         $this->leaveRepository= $leaveRepository;
+        $this->employeeRepository=$employeeRepository;
     
      }
     public function index()
     {
        $users= $this->leaveRepository->getUserByEmpId();
        $leaves=$this->leaveRepository->getLeaveByEmpId();
-      
-       $employee=Employee::all();
+   
+       $employee=$this->employeeRepository->all();
 
       $remainingleavedays= $this->leaveRepository->calculateRemainingLeaves();
  
-        return view('Employee.leave',compact('leaves','users','employee','remainingleavedays'));
+        return view('Leave.index',compact('leaves','users','employee','remainingleavedays'));
     }
 
     /**
@@ -43,7 +46,7 @@ class LeaveRequestController extends Controller
     public function create()
     {
         
-        return view('Employee.leaverequest');
+        return view('Leave.leaverequest');
     }
 
     /**

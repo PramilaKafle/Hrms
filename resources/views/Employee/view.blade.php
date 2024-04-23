@@ -51,6 +51,23 @@
                                     <td>{{ $emptype->Name }}</td>
                                     @endforeach
                                 </tr>
+                                <tr>
+                                    <td>Project Assigned:</td>
+                                   
+                                    <td>
+                                        @if($employee->projects->isNotEmpty() )
+                                        @foreach($employee->projects as $project)
+                                            {{ $project->name }}
+                                            @if (!$loop->last) 
+                                                ,
+                                            @endif
+                                        @endforeach
+                                        @else
+                                        Not Assigned
+                                        @endif
+                                    </td>
+                                
+                                </tr>
                                 @endif
                             </table>
                         </div>

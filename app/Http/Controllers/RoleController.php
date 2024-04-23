@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\RoleRepository;
+use App\Repositories\PermissionRepository;
 
 use App\Models\Role;
 use App\Models\Permission;
@@ -15,20 +16,23 @@ class RoleController extends Controller
      */
    
     private RoleRepository $roleRepository;
+    private PermissionRepository $permissionRepository;
 
-    public function __construct(RoleRepository $roleRepository)
+    public function __construct(RoleRepository $roleRepository,PermissionRepository $permissionRepository)
     {
       
       
        $this->roleRepository= $roleRepository;
+       $this->permissionRepository = $permissionRepository;
        $this->middleware('CheckPermission:create_role')->except('index','show','edit','update');
        $this->middleware('CheckPermission:edit_role')->only('edit','update');
     //    $this->middleware('CheckPermission:view_role')->only('show');
     }
-    public function index()
+    public function index(Request $request)
     {
-      $roles =$this->roleRepository->all();
-      return view('Admin.role',compact('roles'));
+        $page = $request->input('page', 1);
+      $roles =$this->roleRepository->all($page);
+      return view('Role.role',compact('roles'));
     }
 
     /**
@@ -36,8 +40,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions=Permission::all();
-        return view('Admin.addrole',compact('permissions'));
+        $permissions=$this->permissionRepository->all();
+        return view('Role.formmodel',compact('permissions'));
         
     }
 
@@ -61,7 +65,7 @@ class RoleController extends Controller
     public function show(string $id)
     {
         $role=$this->roleRepository->getById($id);
-        return view('Admin.viewrole',compact('role'));
+        return view('Role.view',compact('role'));
     }
 
     /**
@@ -70,8 +74,8 @@ class RoleController extends Controller
     public function edit(string $id)
     {
         $role=$this->roleRepository->getById($id);
-        $permissions=Permission::all();
-     return view('Admin.editrole',compact('role','permissions'));
+        $permissions=$this->permissionRepository->all();
+     return view('Role.formmodel',compact('role','permissions'));
     }
 
     /**

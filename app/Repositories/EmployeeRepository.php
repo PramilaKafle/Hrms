@@ -42,15 +42,15 @@ class EmployeeRepository extends BaseRepository{
     
    public function getEmployeeOnly()
    {
-$employeeids =Employee::pluck('user_id')->toArray();
-$users =User::whereIn('id',$employeeids)->paginate(5);
-return $users;
-}
+    $employeeids =Employee::pluck('user_id')->toArray();
+    $users =User::whereIn('id',$employeeids)->paginate(5);
+   return $users;
+  }
 
 
-public function findByUserId(string $id)
-{
+   public function findByUserId(string $id)
+  {
     return Employee::where('user_id',$id)->first();
-}
+  }
 
 }

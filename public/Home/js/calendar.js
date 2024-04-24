@@ -6,7 +6,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('month').addEventListener('change', displayCalendar);
-  document.getElementById('project').addEventListener('change', displayCalendar);
+  //document.getElementById('project').addEventListener('change', displayCalendar);
 
   function displayCalendar() {
     var selectedMonth = parseInt(document.getElementById('month').value);
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log(selectedProject);
 
-    if ((selectedMonth) && (selectedProject)) {
+    //if ((selectedMonth) && (selectedProject)) {
       var currentYear = new Date().getFullYear();
 
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const calendar = createCalendar(startDate, endDate, selectedProject);
       calendarContainer.appendChild(calendar);
-    }
+   // }
   }
 
 

@@ -15,7 +15,7 @@
         @include('Home.navbar')
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
-
+               
                 @include('Home.sidenav')
             </div>
             <div id="layoutSidenav_content">

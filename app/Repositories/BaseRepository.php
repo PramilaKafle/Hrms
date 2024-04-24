@@ -23,10 +23,13 @@ class BaseRepository implements BaseRepositoryInterface{
 public function all($page=null)
 {
     if ($page) {
-        return $this->model->paginate(5, ['*'], 'page', $page);;
+        return $this->model->paginate(5, ['*'], 'page', intval($page));
     }
- return $this->model->all();
-}
+    else{
+        return $this->model->all();
+    }
+ }
+
 public function getById(string $id)
 {
    return $this->model::findOrFail($id);
@@ -68,14 +71,6 @@ public function update(string $id, array $data)
 public function delete($id)
 {
      $record = $this->model::find($id);
-     if(isset($record->status))
-     {
-        if($record->status === 'approved'|| $record->status == 'declined')
-        {
-            return redirect()->route('leave.index')->with('error','Cannot cancel the Request. Already '. $record->status);
-        }
-     }
-    
      return $record->delete();
     
     

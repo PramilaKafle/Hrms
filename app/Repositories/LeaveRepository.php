@@ -96,4 +96,21 @@ $users = User::whereHas('emp_types', function ($query) use ($empidsonleave) {
 
 return $users;
 }
+
+public function delete($id)
+{
+     $record = LeaveRequest::findOrFail($id);
+     if(isset($record->status))
+     {
+        if($record->status === 'approved'|| $record->status == 'declined')
+        {
+            return redirect()->route('leave.index')->with('error','Cannot cancel the Request. Already '. $record->status);
+        }
+     }
+    
+     return $record->delete();
+    
+    
+}
+
 }

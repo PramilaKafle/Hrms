@@ -5,26 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Employee;
+use App\Models\Project;
 use App\Repositories\TimesheetRepository;
 use App\Repositories\EmployeeRepository;
 use Carbon\carbon;
 
 class TimesheetController extends Controller
 {
-    private EmployeeRepository  $employeeRepository;
-    public function __construct(EmployeeRepository  $employeeRepository)
+    private TimesheetRepository  $timesheetRepository;
+    public function __construct(TimesheetRepository  $timesheetRepository)
     {
-       $this->employeeRepository=$employeeRepository;
+       $this->timesheetRepository=$timesheetRepository;
     }
-    public function index()
+    public function index(string $id)
     // {  $date= Carbon::now();
        {
        
-        $user=auth()->user();
-        $employees=$this->employeeRepository->findByUserId($user->id);
-        
-        //dd($timesheet);
-        return view('Timesheet.index',compact('employees'));
+        //$user=auth()->user();
+        //$employees=$this->employeeRepository->findByUserId($user->id);
+        $projects=Project::find($id);
+        return view('Timesheet.index',compact('projects'));
     }
 
     /**
@@ -74,6 +74,11 @@ class TimesheetController extends Controller
     {
         //
     }
-
+    public function getProjects()
+    {
+      
+     $projects= $this->timesheetRepository->getProjectByEmp();
+      return view('Timesheet.project',compact('projects'));
+    }
 
 }

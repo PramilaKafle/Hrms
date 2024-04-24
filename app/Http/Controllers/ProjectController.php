@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\Employee;
 use App\Models\User;
 // use App\Interfaces\BaseRepositoryInterface;
 use App\Repositories\ProjectRepository;
-
+use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     private ProjectRepository $projectRepository;
@@ -81,4 +82,15 @@ class ProjectController extends Controller
         $this->projectRepository->delete($id);
         return redirect()->route('project.index');
     }
+
+  public function dashboard()
+  {
+    
+    $user=auth::user();
+    $employee =Employee::where('user_id',$user->id)->first();
+    $projects=$employee->projects;
+    return view('Project.dashboard',compact('projects'));
+  }
+
+
 }

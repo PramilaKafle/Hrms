@@ -6,17 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Employee;
-use App\Interfaces\BaseRepositoryInterface;
+use App\Repositories\ProjectRepository;
 
 class HomeController extends Controller
 {
-//     private BaseRepositoryInterface $baseRepository;
+    private ProjectRepository $projectRepository;
 
-//     public function __construct(BaseRepositoryInterface $baseRepository)
-//     {
-//    $this->baseRepository=$baseRepository;
-   
-//     }
+    public function __construct(ProjectRepository $projectRepository)
+    {
+        $this->projectRepository=$projectRepository;
+    }
  
     public function redirect()
 {
@@ -25,8 +24,7 @@ class HomeController extends Controller
    
       $employees =Employee::all();
     
-        
-        return view('Home.dashboard',compact('employees','allusers'));
+        return view('Home.dashboard',compact('employees','allusers',));
     }
 
 

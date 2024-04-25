@@ -47,18 +47,22 @@ Route::middleware('auth')->group(function () {
     Route::resource('/project',ProjectController::class);
     Route::resource('/timesheet',TimesheetController::class);
 
+  Route::post('/timesheet/store',[TimesheetController::class,'store'])->name('timesheet.store');
 
     Route::get('/assign',[EmployeeController::class,'projectassign'])->name('employee.assign');
     Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');
     Route::get('/leave/approved/{id}',[LeaveRequestController::class,'approve'])->name('leave.approve');
     Route::get('/leave/declined/{id}',[LeaveRequestController::class,'decline'])->name('leave.decline');
+
+    Route::group(['prefix' => 'projectdash'], function () {
+        Route::get('/', [ProjectController::class, 'dashboard'])->name('project.dashboard');
+        Route::get('/{id}', [ProjectController::class, 'getProject'])->name('project.selected');
+        Route::get('/{id}/timesheet',[TimesheetController::class,'index'])->name('project.timesheet');
+        // Route::post('/{id}/timesheet/store',[TimesheetController::class,'store'])->name('timesheet.store');
+    });
   
 });
 
-Route::group(['prefix' => 'projectdash'], function () {
-    Route::get('', [ProjectController::class, 'dashboard'])->name('project.dashboard');
-    Route::get('/timesheet',[TimesheetController::class,'getprojects'])->name('timesheet.project');
-    Route::get('/timesheet/{id}',[TimesheetController::class,'index'])->name('timesheet.create');
-});
+
 
 require __DIR__.'/auth.php';

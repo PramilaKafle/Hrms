@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Employee;
 use App\Models\Project;
+use App\Models\Timesheet;
 use App\Repositories\TimesheetRepository;
 use App\Repositories\EmployeeRepository;
 use Carbon\carbon;
@@ -13,18 +14,20 @@ use Carbon\carbon;
 class TimesheetController extends Controller
 {
     private TimesheetRepository  $timesheetRepository;
-    public function __construct(TimesheetRepository  $timesheetRepository)
+    private EmployeeRepository  $employeeRepository;
+    public function __construct(TimesheetRepository  $timesheetRepository,EmployeeRepository  $employeeRepository)
     {
        $this->timesheetRepository=$timesheetRepository;
+       $this->employeeRepository=$employeeRepository;
     }
     public function index(string $id)
     // {  $date= Carbon::now();
        {
        
-        //$user=auth()->user();
-        //$employees=$this->employeeRepository->findByUserId($user->id);
+        $user=auth()->user();
+        $employees=$this->employeeRepository->findByUserId($user->id);
         $projects=Project::find($id);
-        return view('Timesheet.index',compact('projects'));
+        return view('Timesheet.index',compact('projects','id','employees'));
     }
 
     /**
@@ -40,7 +43,14 @@ class TimesheetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
+        $data=$request->all();
+        $this->timesheetRepository->store($data);
+        if ($request->ajax()) {
+        return response()->json(['message' => 'Data stored successfully', 'data' => $data]);
+       
+    }
+        //return view('Project.projectdash');
     }
 
     /**
@@ -48,7 +58,7 @@ class TimesheetController extends Controller
      */
     public function show(string $id)
     {
-        //
+       
     }
 
     /**
@@ -74,11 +84,6 @@ class TimesheetController extends Controller
     {
         //
     }
-    public function getProjects()
-    {
-      
-     $projects= $this->timesheetRepository->getProjectByEmp();
-      return view('Timesheet.project',compact('projects'));
-    }
+   
 
 }

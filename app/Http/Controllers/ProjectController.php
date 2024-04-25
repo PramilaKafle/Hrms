@@ -85,11 +85,16 @@ class ProjectController extends Controller
 
   public function dashboard()
   {
-    
-    $user=auth::user();
-    $employee =Employee::where('user_id',$user->id)->first();
-    $projects=$employee->projects;
+
+    $projects=$this->projectRepository->getProjectByEmp();
     return view('Project.dashboard',compact('projects'));
+  }
+
+  public function getProject(string $id)
+  {
+    $projects=$this->projectRepository->getById($id);
+ 
+     return view('project.projectdash',compact('projects','id'));
   }
 
 

@@ -2,14 +2,32 @@
     <div class="sb-sidenav-menu">
         <div class="nav">
           
-           
+            @cannot('hasEmployeeType')
             <a class="nav-link" href="{{url('redirect')}}">
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-             @cannot('hasEmployeeType')   User Dashboard @else Employee Dashboard @endcannot
-            </a>
-            @cannot('hasEmployeeType')
+               User Dashboard </a>
+             @else 
+            {{-- for specific project  --}}
+             @if(isset($id))
+             <div class="btn-group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              {{$projects->name}}
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{{url('redirect')}}">Employee Dashboard</a></li>
+                </ul>
+              </div>
+             @else
+             {{-- ends here  --}}
+             <a class="nav-link" href="{{url('redirect')}}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+               Employee Dashboard </a>
+             @endif
+             @endcannot
+            
+          
             <div class="sb-sidenav-menu-heading">Interface</div>
-           
+            @cannot('hasEmployeeType')
             <a class="nav-link" href="{{route('role.index')}}">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
             Role Management
@@ -33,17 +51,14 @@
             </a>
           
             @else
-            @if(isset($projects))
-            <a class="nav-link" href="{{route('project.dashboard')}}">
-                <div class="sb-nav-link-icon"><i class="fa-solid fa-clapperboard"></i></div>
-                Project Dashboard
-            </a>
 
-            <a class="nav-link" href="{{route('timesheet.project')}}">
+            @if(isset($id))
+            <a class="nav-link" href="{{route('project.timesheet',$projects->id)}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
                 Timesheet
             </a>
-          @else
+            @else
+       
             <a class="nav-link" href="">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-user"></i></div>
                 View Profile
@@ -60,7 +75,9 @@
                 <div class="sb-nav-link-icon"> <i class="fa-regular fa-calendar"></i></div>
             leave Management
             </a>
-        @endif
+
+         
+            @endif
             @endcannot
             
           

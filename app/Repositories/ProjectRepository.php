@@ -12,6 +12,23 @@ class ProjectRepository extends BaseRepository{
     {
         parent::__construct(new Project());
     }
-    
+
+    public function getProjectByEmp()
+    {
+        $user=auth()->user();
+    if($user->emp_types->isNotEmpty())
+    {
+        $userid=$user->id;
+        $employee =Employee::where('user_id',$user->id)->first();
+        $projects=$employee->projects;
+    }
+    else{
+        $projects= Project::all();
+      
+    }
+       
+       
+         return $projects;
+    }
   
 }

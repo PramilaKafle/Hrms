@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('employee_id');
-            $table->date('Date');
+            $table->unsignedBigInteger('Date');
             $table->decimal('working_hour',5,2);
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

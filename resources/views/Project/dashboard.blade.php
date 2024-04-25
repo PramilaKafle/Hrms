@@ -3,23 +3,49 @@
 
 <h1 class="mt-4">Dashboard</h1>
 <ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active"> Project Dashboard</li>
+    <li class="breadcrumb-item"><a href="{{ url('redirect') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active"> Assigned Projects</li>
 </ol>
 
-<div class="row">
-    <div class="col-xl-3 col-md-6">
-        <div class="card bg-primary text-white mb-4">
-            <div class="card-header align-items-center">Total Projects</div>
-            <div class="card-body">
-                <div class=" d-flex align-items-center justify-content-center">
-                    <i class="fa-regular fa-user fa-lg mr-2"></i>
-                    <!-- Added fa-lg class to increase icon size and mr-2 for margin -->
-                    <div class="text-white mx-2" style="font-size: 20px;">{{ $projects->count() }}</div>
+<div class="main-content mt-4">
+    <div class="card mx-6">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h4>Project Information</h4>
+                </div>
+                <div class="col d-flex justify-content-end">
                 </div>
             </div>
+        </div>
+        <div class="card-body">
+            <table class=" table">
+                <thead style="background: #f2f2f2">
+                    <tr>
+                        <th scope="col" style="width: 10%">SN</th>
+                        <th scope="col" style="width: 10%">Name</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $sl=0;
+                @endphp
+                    @foreach($projects as $project)
+                    <tr>
+                       
+                    <th scope="row">{{++$sl}}</th>
+                    <td>
+                        <a href="{{route('project.selected',$project->id)}}">{{$project->name}}</a>
+                    </td>
+
+                </tr>
+                    @endforeach  
+                </tbody>
+            </table>
 
         </div>
-
     </div>
 </div>
+
 @endsection

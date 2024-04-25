@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\RoleRepository;
-use App\Repositories\PermissionRepository;
+use App\Repositories\BaseRepository;
+// use App\Repositories\PermissionRepository;
 
 
 use App\Models\Role;
@@ -17,14 +18,17 @@ class RoleController extends Controller
      */
    
     private RoleRepository $roleRepository;
-    private PermissionRepository $permissionRepository;
+    private $baseRepository;
+    // private PermissionRepository $permissionRepository;
 
-    public function __construct(RoleRepository $roleRepository,PermissionRepository $permissionRepository)
+    public function __construct(RoleRepository $roleRepository)
     {
       
       
        $this->roleRepository= $roleRepository;
-       $this->permissionRepository = $permissionRepository;
+    //  $this->permissionRepository = $permissionRepository;
+       $this->baseRepository = new BaseRepository(new Permission());
+       
        $this->middleware('CheckPermission:create_role')->except('index','show','edit','update');
        $this->middleware('CheckPermission:edit_role')->only('edit','update');
     //    $this->middleware('CheckPermission:view_role')->only('show');
@@ -41,7 +45,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions=$this->permissionRepository->all();
+        $permissions=$this->baseRepository->all();
         return view('Role.formmodel',compact('permissions'));
         
     }
@@ -75,7 +79,7 @@ class RoleController extends Controller
     public function edit(string $id)
     {
         $role=$this->roleRepository->getById($id);
-        $permissions=$this->permissionRepository->all();
+        $permissions=$this->baseRepository->all();
      return view('Role.formmodel',compact('role','permissions'));
     }
 

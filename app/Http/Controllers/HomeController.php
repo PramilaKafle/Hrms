@@ -6,15 +6,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Employee;
+use App\Models\Project;
 use App\Repositories\ProjectRepository;
+use App\Repositories\LeaveRepository;
 
 class HomeController extends Controller
 {
     private ProjectRepository $projectRepository;
+    private LeaveRepository $leaveRepository;
 
-    public function __construct(ProjectRepository $projectRepository)
+    public function __construct(ProjectRepository $projectRepository,LeaveRepository $leaveRepository)
     {
         $this->projectRepository=$projectRepository;
+        $this->leaveRepository=$leaveRepository;
     }
  
     public function redirect()
@@ -23,8 +27,9 @@ class HomeController extends Controller
        $allusers=User::all();
    
       $employees =Employee::all();
-    
-        return view('Home.dashboard',compact('employees','allusers',));
+      $projects=$this->projectRepository->getProjectByEmp();
+      $leaves=$this->leaveRepository->getLeaveByEmpId();
+        return view('Home.dashboard',compact('employees','allusers','projects','leaves'));
     }
 
 

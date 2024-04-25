@@ -4,8 +4,7 @@
 
     <h1 class="mt-4">Timesheet</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="{{ url('projectdash') }}">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="{{ url('projectdash/timesheet') }}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{{route('project.selected',$projects->id) }}">Dashboard</a></li>
         <li class="breadcrumb-item active">Timesheet</li>
     </ol>
 
@@ -14,6 +13,7 @@
         <form action="" id="timesheetForm" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group row mb-4">
+                <input type="hidden"  id ="employee_id" name="employee_id" value="{{$employees->id}}">
                 <label class="control-label col-sm-2" for="project">Project:</label>
                 <div class="col-sm-3">
                     <input type="hidden"  id ="project" name="project" value="{{$projects->id}}">

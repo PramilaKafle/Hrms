@@ -8,7 +8,7 @@ Calendar container
     margin: 0 auto;
 }
 
-.calender-header
+.calendar-header
  {
     text-align: center;
     margin-bottom: 10px;
@@ -33,6 +33,25 @@ Calendar container
 
 .day-label{
 text-align: center;
+}
+.day{
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+}
+.dull{
+    color:#ccc;
+}
+.today{
+    background-color: bisque;
+    font-weight: bold;
+}
+.day-of-week{
+    display:flex;
+    flex-direction: row-reverse;
+  font-size:x-small;
 }
 
 

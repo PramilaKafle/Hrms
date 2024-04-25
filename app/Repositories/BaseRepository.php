@@ -44,10 +44,10 @@ public function store(array $data)
     DB::commit();
   
        
-    }catch(Exception)
+    }catch(Exception $e)
     {
         DB::rollBack();
-        return redirect()->back()->with('error', 'Error creating user: ');
+        return redirect()->back()->with('error', 'Error creating user: '.$e->getMessage());
     }
   
 }

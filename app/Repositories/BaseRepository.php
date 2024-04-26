@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Facades\DB;
 use File;
-use Carbon\Carbon;
 
 class BaseRepository implements BaseRepositoryInterface{
     protected $model; 
@@ -37,16 +36,11 @@ public function getById(string $id)
 
 public function store(array $data)
 {
-    DB::beginTransaction();
+   
     try{
-      $record= $this->model::create($data);
-
-    DB::commit();
-  
-       
+      $record= $this->model::create($data);  
     }catch(Exception $e)
     {
-        DB::rollBack();
         return redirect()->back()->with('error', 'Error creating user: '.$e->getMessage());
     }
   
@@ -54,16 +48,14 @@ public function store(array $data)
 
 public function update(string $id, array $data)
 {
-    DB::beginTransaction();
+    
 
     try {
         $user = $this->model::findOrFail($id);
-        $user->update($data);
-        DB::commit();
+        $user->update($data);  
 
     } catch (Exception $e) {
-        DB::rollBack();
-         return redirect()->back()->with('error', 'Error updating user: ');
+          return redirect()->back()->with('error', 'Error updating user: ');
     
     }
 }

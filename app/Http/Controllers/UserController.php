@@ -9,14 +9,17 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Employee;
 use App\Repositories\UserRepository;
+use App\Repositories\RoleRepository;
 
 class UserController extends Controller
 {   private UserRepository $userRepository;
+    private RoleRepository $roleRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository,RoleRepository $roleRepository)
     {
       
        $this->userRepository= $userRepository;
+       $this->roleRepository= $roleRepository;
        
        $this->middleware('CheckPermission:create')->except('index','show');
        $this->middleware('CheckPermission:view')->only(['index','show']);
@@ -36,7 +39,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles=Role::all();
+        $roles=$this->roleRepository->all();
         return view('User.model',compact('roles'));
     }
 
@@ -72,7 +75,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user=$this->userRepository->getById($id);
-         $roles=Role::all();
+         $roles=$this->roleRepository->all();
          return view('User.model',compact('user','roles'));
     }
 

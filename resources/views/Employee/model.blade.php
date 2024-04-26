@@ -50,7 +50,7 @@
                         <div class="form-group">
                             <label for="" class="form-label">Employee Type:</label>
                             <select id="" class="form-control" name="emp_type_id">
-                                <option value="">Select</option>
+                                <option value="" disabled selected>Select</option>
 
                                 @foreach ($employeetypes as $employeetype)
                                     <option @if(isset($user))  {{ $user->emp_types->contains($employeetype->id) ? 'selected': ''}} @endif 

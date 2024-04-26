@@ -14,7 +14,8 @@
               {{$projects->name}}
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{{url('redirect')}}">Employee Dashboard</a></li>
+                    
+                  <li><a class="dropdown-item" href="{{route('project.dashboard')}}">Employee Dashboard</a></li>
                 </ul>
               </div>
              @else

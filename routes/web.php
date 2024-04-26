@@ -45,9 +45,7 @@ Route::middleware('auth')->group(function () {
   
     Route::resource('/leave',LeaveRequestController::class);
     Route::resource('/project',ProjectController::class);
-    Route::resource('/timesheet',TimesheetController::class);
-
-  Route::post('/timesheet/store',[TimesheetController::class,'store'])->name('timesheet.store');
+   // Route::resource('/timesheet',TimesheetController::class);
 
     Route::get('/assign',[EmployeeController::class,'projectassign'])->name('employee.assign');
     Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');
@@ -58,7 +56,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ProjectController::class, 'dashboard'])->name('project.dashboard');
         Route::get('/{id}', [ProjectController::class, 'getProject'])->name('project.selected');
         Route::get('/{id}/timesheet',[TimesheetController::class,'index'])->name('project.timesheet');
-        // Route::post('/{id}/timesheet/store',[TimesheetController::class,'store'])->name('timesheet.store');
+        Route::post('/{id}/timesheet/store',[TimesheetController::class,'store'])->name('timesheet.store');
+        Route::post('/{id}/timesheet/edit-data',[TimesheetController::class,'update'])->name('timesheet.update');
+        Route::get('/{id}/timesheet/get-data',[TimesheetController::class,'gettimesheetdata'])->name('timesheet.getdata');
     });
   
 });

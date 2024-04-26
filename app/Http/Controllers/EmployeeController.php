@@ -136,13 +136,12 @@ class EmployeeController extends Controller
 
     public function projectstore(Request $request)
     {
-     $request->validate([
+    $data= $request->validate([
         'user_id'=>['required'],
         'project_id'=>['required'],
        ]);
-     $employee=Employee::where('user_id',$request->user_id)->first();
-     $employee->projects()->sync($request->project_id);
-     return redirect()->route('employee.index')->with('success', 'Project assigned to employee successfully.');
+    $this->employeeRepository->projectstore($data);
+     return redirect()->route('employee.index');
 
 
     }

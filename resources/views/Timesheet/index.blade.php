@@ -9,6 +9,7 @@
     </ol>
 
     <div class="main-content">
+        <div id="response-container"></div>
 
         <form action="" id="timesheetForm" method="POST" enctype="multipart/form-data">
             @csrf
@@ -22,7 +23,7 @@
                 <label class="control-label col-sm-2" for="project">Month:</label>
                 <div class="col-sm-3">
                     <select name="month" id="month" class="form-control">
-                        <option value="">Select</option>
+                        <option value="" disabled selected>Select</option>
                         @php
                             $months = [
                                 'January',
@@ -50,8 +51,12 @@
       
         <div id='calendar' class='calendar'>
     
-
+         
         </div>
+        <div class="d-flex justify-content-end mt-4"> <!-- Added mt-4 for margin top -->
+            <button  id='timesheet-btn'class="btn btn-secondary hidden">Save</button>
+        </div>
+       
     </div>
 @endsection
 

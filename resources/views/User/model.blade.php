@@ -65,7 +65,7 @@
                                     <label class="control-label col-sm-2 " for="role">Role:</label>
                                     <div class="col-sm-8">
                                         <select name="roles" id="" class="form-control">
-                                            <option value="">Select</option>
+                                            <option value=""disabled selected>Select</option>
                                             @foreach ($roles as $role)
                                                 <option  @if(isset($user))  {{$user->roles->contains($role->id) ? 'selected' :''}} @endif 
                                                     value="{{ $role->id }}">{{ $role->name }}</option>

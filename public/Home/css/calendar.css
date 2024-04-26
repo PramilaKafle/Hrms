@@ -53,6 +53,12 @@ text-align: center;
     flex-direction: row-reverse;
   font-size:x-small;
 }
+/* .hours:hover
+{
+    color: red; 
+    background-color: lightgray; 
+    font-weight: bold; 
+} */
 
 
 

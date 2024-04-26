@@ -53,4 +53,11 @@ class EmployeeRepository extends BaseRepository{
     return Employee::where('user_id',$id)->first();
   }
 
+  public function projectstore(array $data)
+  {
+    $employee=Employee::where('user_id',$data['user_id'])->first();
+    $employee->projects()->sync($data['project_id']);
+    return redirect()->route('employee.index')->with('success', 'Project assigned to employee successfully.');
+  }
+
 }

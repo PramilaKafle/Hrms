@@ -21,12 +21,14 @@ class TimesheetController extends Controller
        $this->employeeRepository=$employeeRepository;
     }
     public function index(string $id)
-    // {  $date= Carbon::now();
+  
        {
        
         $user=auth()->user();
         $employees=$this->employeeRepository->findByUserId($user->id);
         $projects=Project::find($id);
+       // $timesheet=$this->timesheetRepository->gettimesheetdata($projects,$employees);
+        //dd($timesheet);
         return view('Timesheet.index',compact('projects','id','employees'));
     }
 
@@ -47,9 +49,10 @@ class TimesheetController extends Controller
         $data=$request->all();
         $this->timesheetRepository->store($data);
         if ($request->ajax()) {
-        return response()->json(['message' => 'Data stored successfully', 'data' => $data]);
+        return response()->json(['message' => 'Timesheet Data stored successfully', 'data' => $data]);
        
-    }
+        }
+        //return redirect()->route('timesheet.store')->with('success', 'Timesheet data added successfully');
         //return view('Project.projectdash');
     }
 
@@ -66,7 +69,7 @@ class TimesheetController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
     }
 
     /**
@@ -74,7 +77,14 @@ class TimesheetController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+         
+         $data=$request->all();
+         $this->timesheetRepository->update($id,$data);
+       
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Timesheet Data edited successfully','data' => $data ]);
+           
+            }
     }
 
     /**
@@ -83,6 +93,18 @@ class TimesheetController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function gettimesheetdata(Request $request ,string $id)
+    {
+        
+        $user=auth()->user();
+        $employees=$this->employeeRepository->findByUserId($user->id);
+        $projects=Project::find($id);
+        $timesheet=$this->timesheetRepository->gettimesheetdata($projects,$employees);
+        
+        return response()->json(['message' => 'Data taken successfully', 'data' => $timesheet]);
+           
+       
     }
    
 

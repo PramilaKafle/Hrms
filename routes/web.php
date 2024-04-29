@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     
-     Route::resource('employee', EmployeeController::class);
+    Route::resource('employee', EmployeeController::class);
     Route::resource('/user',UserController::class);
     Route::resource('/role',RoleController::class);
   
@@ -54,11 +54,15 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['prefix' => 'projectdash'], function () {
         Route::get('/', [ProjectController::class, 'dashboard'])->name('project.dashboard');
-        Route::get('/{id}', [ProjectController::class, 'getProject'])->name('project.selected');
-        Route::get('/{id}/timesheet',[TimesheetController::class,'index'])->name('project.timesheet');
-        Route::post('/{id}/timesheet/store',[TimesheetController::class,'store'])->name('timesheet.store');
-        Route::post('/{id}/timesheet/edit-data',[TimesheetController::class,'update'])->name('timesheet.update');
-        Route::get('/{id}/timesheet/get-data',[TimesheetController::class,'gettimesheetdata'])->name('timesheet.getdata');
+        Route::get('/{project}', [ProjectController::class, 'getProject'])->name('project.selected');
+
+        Route::group(['prefix' => '{project}/timesheet'], function () {
+            Route::get('/', [TimesheetController::class, 'index'])->name('project.timesheet');
+            Route::post('/store', [TimesheetController::class, 'store'])->name('timesheet.store');
+            Route::post('/edit-data', [TimesheetController::class, 'update'])->name('timesheet.update');
+            Route::get('/get-data', [TimesheetController::class, 'gettimesheetdata'])->name('timesheet.getdata');
+            Route::post('/delete-data', [TimesheetController::class, 'deletedata'])->name('timesheet.deletedata');
+        });
     });
   
 });

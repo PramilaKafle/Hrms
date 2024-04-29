@@ -39,6 +39,7 @@ text-align: center;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    position: relative;
 
 }
 .dull{
@@ -53,13 +54,15 @@ text-align: center;
     flex-direction: row-reverse;
   font-size:x-small;
 }
-/* .hours:hover
-{
-    color: red; 
-    background-color: lightgray; 
-    font-weight: bold; 
-} */
 
+
+.delete-btn {
+
+    position: absolute;
+    top: 6px;
+    right:30px;
+  
+}
 
 
   

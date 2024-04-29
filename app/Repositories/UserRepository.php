@@ -13,6 +13,15 @@ class UserRepository extends BaseRepository
 
     public function store(array $data)
     {
+        if (isset($data['image']) && $data['image']->isValid()) {
+            // Retrieve the uploaded image
+            $image = $data['image'];
+            $imageName = time() . '_' . $image->getClientOriginalName();
+
+            $imagepath=  $image->move(public_path('images'), $imageName);
+            $data['image'] = 'images/'.$imageName;
+        }
+        //dd($data['image']);
         $user=User::create($data);
         $roledata=$data['roles'];
         $user->roles()->sync($roledata);

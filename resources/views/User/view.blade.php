@@ -23,7 +23,9 @@
                     <div class="row">
                         <div class="col-md-4">
                             <!-- Column for image -->
-
+                           
+                            <img width="" src="{{ asset($users->image) }}" alt="">
+        
                         </div>
                         <div class="col-md-8">
                             <!-- Column for data -->

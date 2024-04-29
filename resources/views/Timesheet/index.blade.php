@@ -9,7 +9,7 @@
     </ol>
 
     <div class="main-content">
-        <div id="response-container"></div>
+        <div id="response-container" class="alert alert-danger" style="display: none"></div>
 
         <form action="" id="timesheetForm" method="POST" enctype="multipart/form-data">
             @csrf

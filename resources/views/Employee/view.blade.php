@@ -41,7 +41,7 @@
                                     <td>{{ $user->id }}</td>
                                 </tr>
                                 <tr>
-                                    @if ($employee)
+                                    {{-- @if ($employee) --}}
                                         <td>Employee ID:</td>
                                         <td>{{ $employee->id }}</td>
                                 </tr>
@@ -68,7 +68,7 @@
                                     </td>
                                 
                                 </tr>
-                                @endif
+                                {{-- @endif --}}
                             </table>
                         </div>
                     </div>

@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Timesheet;
 use App\Repositories\TimesheetRepository;
 use App\Repositories\EmployeeRepository;
+use Illuminate\Support\Facades\Validator;
 use Carbon\carbon;
 
 class TimesheetController extends Controller
@@ -45,15 +46,21 @@ class TimesheetController extends Controller
      */
     public function store(Request $request)
     {
-       
-        $data=$request->all();
+        
+        $data =$request->validate([
+            'Date'=>['required','date'],
+            'working_hour'=>['required','numeric','regex:/^\d+(\.\d{1,2})?$/','not_in:0'],
+            'project_id'=>[],
+            'employee_id'=>[],
+        ]);
+        //$data=$request->all();
+     
         $this->timesheetRepository->store($data);
         if ($request->ajax()) {
         return response()->json(['message' => 'Timesheet Data stored successfully', 'data' => $data]);
        
         }
-        //return redirect()->route('timesheet.store')->with('success', 'Timesheet data added successfully');
-        //return view('Project.projectdash');
+      
     }
 
     /**
@@ -78,7 +85,12 @@ class TimesheetController extends Controller
     public function update(Request $request, string $id)
     {
          
-         $data=$request->all();
+        $data =$request->validate([
+            'Date'=>['required','date'],
+            'working_hour'=>['required','numeric','regex:/^\d+(\.\d{1,2})?$/','gt:0'],
+            'project_id'=>[],
+            'employee_id'=>[],
+        ]);
          $this->timesheetRepository->update($id,$data);
        
         if ($request->ajax()) {
@@ -90,9 +102,17 @@ class TimesheetController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function deletedata(Request $request ,string $id)
     {
-        //
+        
+        //dd($id);
+       //$data=Timesheet::find($id);
+       $this->timesheetRepository->delete($id);
+        if ($request->ajax()) {
+          
+            return response()->json(['message' => 'Timesheet Data deleted successfully' ]);
+        }
+           
     }
     public function gettimesheetdata(Request $request ,string $id)
     {

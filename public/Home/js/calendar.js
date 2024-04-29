@@ -4,26 +4,28 @@ $(document).ready(function()
 {
 $('#month').on('change',displayCalendar);
 
-function displayCalendar()
-{
-   var selectedMonth= parseInt($('#month').val());
-   var selectedProject= parseInt($('#project').val());
-   var currentYear = new Date().getFullYear();
-
-   var startDate = new Date(currentYear, selectedMonth - 1, 1); // Months are zero-based in JavaScript
-   var endDate = new Date(currentYear, selectedMonth, 0); // End date is one day before the start of the next month
-
-   $('#calendar').empty();
-
-   var calendar = createCalendar(startDate, endDate, selectedProject);
-   $('#calendar').append(calendar);
-   $('#timesheet-btn').removeClass('hidden');
+function displayCalendar() {
+  var selectedMonth = parseInt($('#month').val());
+  var selectedProject = parseInt($('#project').val());
+  reloadCalendar(selectedMonth, selectedProject);
+  $('#timesheet-btn').removeClass('hidden');
 }
+
+
 
 });
 
+function reloadCalendar(selectedMonth, selectedProject) {
+  var currentYear = new Date().getFullYear();
+  var startDate = new Date(currentYear, selectedMonth - 1, 1);
+  var endDate = new Date(currentYear, selectedMonth, 0);
 
-
+  $('#calendar').empty(); // Clear existing calendar
+  
+  // Call createCalendar with updated start/end dates and project
+  var calendar = createCalendar(startDate, endDate, selectedProject);
+  $('#calendar').append(calendar);
+}
 
 function createCalendar(startDate, endDate, selectedProject) {
   const calendar = $('<div>').addClass('calendar');
@@ -74,6 +76,25 @@ function createCalendar(startDate, endDate, selectedProject) {
       const contentEl = $('<span>').addClass('content').attr('data-date',date);
           if (matchingEntry) {
             contentEl.text(matchingEntry.working_hour).addClass('hours');
+            const deleteBtn = $('<button>').addClass('btn btn-danger delete-btn').text('Delete');
+            deleteBtn.on('click', function() {
+                deleteCalendarData(matchingEntry.id);
+            });
+            deleteBtn.hide();
+            dayEl.dblclick(function(){
+              $('.delete-btn').hide(); //hide all btn before displaying
+              deleteBtn.show();
+            
+            });
+            // dayEl.hover(
+            //   function() {
+            //       deleteBtn.show();
+            //   },
+            //   function() {
+            //       deleteBtn.hide();
+            //   });
+              
+            dayEl.append(deleteBtn);
           }
           else{
                 contentEl.text('0.00');
@@ -100,11 +121,11 @@ function createCalendar(startDate, endDate, selectedProject) {
             const previousContent = $(this).data('previousContent');
           
             // Check if content has been edited
-            if (editedContent !== previousContent && editedContent !== '.00') {
+            if (editedContent !== previousContent && editedContent !== '0.0') {
                 $(this).data('edited', true); 
             } else {
                 $(this).data('edited', false); 
-            }
+           }
         });
 
       $('#timesheet-btn').click(function()
@@ -122,10 +143,21 @@ function createCalendar(startDate, endDate, selectedProject) {
             //console.log(matchingEntry.id);
              editCalendarData(editedContent, date, projectId, employeeId,matchingEntry.id);
              $(this).data('edited', false); 
+           
           }
           else{
-            saveCalendarData(editedContent, date, projectId, employeeId);
-            $(this).data('edited', false); 
+           
+            const currentDayMonth= new Date(date).getMonth()+1;
+            const selectedMonth=($('#month').val());
+            console.log(currentDayMonth);
+            console.log(selectedMonth);
+            if( currentDayMonth == selectedMonth)
+            {
+              saveCalendarData(editedContent, date, projectId, employeeId);
+              $(this).data('edited', false); 
+            }
+           
+            
           }
     
             
@@ -143,6 +175,12 @@ function createCalendar(startDate, endDate, selectedProject) {
   return calendar;
 }
 
+
+
+
+
+
+ 
 
 
 
@@ -179,13 +217,25 @@ function saveCalendarData(editedContent,date,projectId, employeeId)
   },
     success: function (response) {
       console.log("Data added success",response);
-      var message=response.message;
-      alert(message);
-     // $('#response-container').html('<p>' + response.message + '</p>');
+      // var message=response.message;
+      // alert(message);
+      $('#response-container').css('display', 'block');
+       $('#response-container').html('<p>' + response.message + '</p>');
+       $('#response-container').fadeOut(2000);
+       reloadCalendar($('#month').val(), $('#project').val());
   
     },
     error: function(xhr, status, error) {
-      console.log("error occured",error);
+      //console.log("error occured",error);
+      const errors = xhr.responseJSON.errors;
+      if(errors)
+      {
+        console.log(errors);
+        $('#response-container').css('display', 'block');
+        $('#response-container').html('<p>' + errors.working_hour + '</p>');
+        $('#response-container').fadeOut(3000);
+      }
+      reloadCalendar($('#month').val(), $('#project').val());
   }
   });
 }
@@ -209,18 +259,60 @@ function editCalendarData(editedContent, date, projectId, employeeId,timesheetid
   },
     success: function (response) {
      // console.log("Data added success",response);
-      var message=response.message;
-      alert(message);
-     // $('#response-container').html('<p>' + response.message + '</p>');
+
+      $('#response-container').css('display', 'block');
+      $('#response-container').html('<p>' + response.message + '</p>');
+      $('#response-container').fadeOut(3000);
+      reloadCalendar($('#month').val(), $('#project').val());
+
   
     },
     error: function(xhr, status, error) {
       console.log("error occured",error);
+      const errors = xhr.responseJSON.errors;
+      if(errors)
+      {
+        console.log(errors.working_hour);
+        $('#response-container').css('display', 'block');
+        $('#response-container').html('<p>' + errors.working_hour + '</p>');
+        $('#response-container').fadeOut(3000);
+      }
+      reloadCalendar($('#month').val(), $('#project').val());
   }
   });
 }
 
+function deleteCalendarData(timesheetid) {
+  console.log(timesheetid);
+  $.ajax({
+      type: "POST",
+      url: '/projectdash/' + timesheetid + '/timesheet/delete-data',
+      data: {
+          id: timesheetid
+      },
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function(response) {
+        console.log(response);
+          var message = response.message;
+          alert(message);
+          reloadCalendar($('#month').val(), $('#project').val());
+      },
+      error: function(xhr, status, error) {
+          // Handle AJAX error
+          console.log("An error occurred:", error);
+          alert("An error occurred while deleting data.");
+      }
+  });
+}
 
- 
 
- 
+
+ $(document).on('click', function(event) {
+  // Check if the click target is not within a day element
+  if (!$(event.target).closest('.day').length) {
+      // Hide all delete buttons
+      $('.delete-btn').hide();
+  }
+});

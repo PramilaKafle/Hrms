@@ -19,14 +19,13 @@ class RoleController extends Controller
    
     private RoleRepository $roleRepository;
     private $baseRepository;
-    // private PermissionRepository $permissionRepository;
+   
 
     public function __construct(RoleRepository $roleRepository)
     {
       
       
        $this->roleRepository= $roleRepository;
-    //  $this->permissionRepository = $permissionRepository;
        $this->baseRepository = new BaseRepository(new Permission());
        
        $this->middleware('CheckPermission:create_role')->except('index','show','edit','update');

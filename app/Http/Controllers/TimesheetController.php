@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\Timesheet;
+use App\Models\User;
 use App\Repositories\TimesheetRepository;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Support\Facades\Validator;
@@ -21,24 +22,28 @@ class TimesheetController extends Controller
        $this->timesheetRepository=$timesheetRepository;
        $this->employeeRepository=$employeeRepository;
     }
-    public function index(string $id)
-  
-       {
+    public function index()
+     {
+    
+      $timesheetdataes= $this->timesheetRepository->all();
+      $projects=Project::all();
+      $users=User::all();
+      $employee=$this->employeeRepository->all();
        
+       return view('Timesheet.User.index',compact('timesheetdataes','projects','users','employee'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(string $id)
+    {
         $user=auth()->user();
         $employees=$this->employeeRepository->findByUserId($user->id);
         $projects=Project::find($id);
        // $timesheet=$this->timesheetRepository->gettimesheetdata($projects,$employees);
         //dd($timesheet);
         return view('Timesheet.index',compact('projects','id','employees'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // return view('Employee.addtimesheet');
     }
 
     /**
@@ -53,7 +58,7 @@ class TimesheetController extends Controller
             'project_id'=>[],
             'employee_id'=>[],
         ]);
-        //$data=$request->all();
+        $data=$request->all();
      
         $this->timesheetRepository->store($data);
         if ($request->ajax()) {

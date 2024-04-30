@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
   
     Route::resource('/leave',LeaveRequestController::class);
     Route::resource('/project',ProjectController::class);
-   // Route::resource('/timesheet',TimesheetController::class);
+    Route::resource('/timesheet',TimesheetController::class);
 
     Route::get('/assign',[EmployeeController::class,'projectassign'])->name('employee.assign');
     Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');
@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{project}', [ProjectController::class, 'getProject'])->name('project.selected');
 
         Route::group(['prefix' => '{project}/timesheet'], function () {
-            Route::get('/', [TimesheetController::class, 'index'])->name('project.timesheet');
+            Route::get('/', [TimesheetController::class, 'create'])->name('timesheet.create');
             Route::post('/store', [TimesheetController::class, 'store'])->name('timesheet.store');
             Route::post('/edit-data', [TimesheetController::class, 'update'])->name('timesheet.update');
             Route::get('/get-data', [TimesheetController::class, 'gettimesheetdata'])->name('timesheet.getdata');

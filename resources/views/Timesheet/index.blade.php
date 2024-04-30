@@ -62,31 +62,3 @@
 
 
 
-<script>
-//   document.addEventListener('DOMContentLoaded', function() {
-//     var calendarEl = document.getElementById('calendar');
-//     var calendar = new FullCalendar.Calendar(calendarEl, {
-//         initialView: 'dayGridMonth',
-//         selectable: true,
-//         // select: function(info) {
-//         //     var inputField = document.createElement('input');
-//         //     inputField.type = 'text';
-//         //     inputField.placeholder = 'Enter your data';
-//         //     var dayCell = info.dayEl;
-//         //     dayCell.appendChild(inputField);
-
-//         //     // You may want to save this data or perform further actions upon user input
-//         //     inputField.addEventListener('change', function() {
-//         //         var enteredData = inputField.value;
-//         //         console.log('User entered:', enteredData);
-//         //         // Further actions can be performed here
-//         //     });
-//         // }
-//     });
-//     calendar.render();
-// });
-
-
-
-
-</script>

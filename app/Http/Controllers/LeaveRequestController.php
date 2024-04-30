@@ -19,13 +19,13 @@ class LeaveRequestController extends Controller
     //  private BaseRepositoryInterface $baseRepository;
     
     private LeaveRepository $leaveRepository;
-    private EmployeeRepository $employeeRepository;
+  
 
-     public function __construct(LeaveRepository $leaveRepository,EmployeeRepository $employeeRepository)
+     public function __construct(LeaveRepository $leaveRepository)
      {
        
         $this->leaveRepository= $leaveRepository;
-        $this->employeeRepository=$employeeRepository;
+        
     
      }
     public function index()
@@ -33,7 +33,7 @@ class LeaveRequestController extends Controller
        $users= $this->leaveRepository->getUserByEmpId();
        $leaves=$this->leaveRepository->getLeaveByEmpId();
    
-       $employee=$this->employeeRepository->all();
+       $employee=Employee::all();
 
       $remainingleavedays= $this->leaveRepository->calculateRemainingLeaves();
  

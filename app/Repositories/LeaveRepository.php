@@ -62,7 +62,9 @@ public function calculateRemainingLeaves()
    {
     $leaveallowed=Emp_type::where('id',$emp->emp_type_id)->first()->Leave_allowed;
 
-    $totalleavetaken=LeaveRequest::where('emp_id', $emp->id)->sum('applied_for');
+    $totalleavetaken=LeaveRequest::where('emp_id', $emp->id)
+                     ->whereIn('status',['approved','pending'])
+                     ->sum('applied_for');
     $remainingleaves=   $leaveallowed-$totalleavetaken;
     return  $remainingleaves;
    }

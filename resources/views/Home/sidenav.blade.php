@@ -33,18 +33,23 @@
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
             Role Management
             </a>
-            <a class="nav-link" href="{{route('project.index')}}">
-                <div class="sb-nav-link-icon"><i class="fa-solid fa-file"></i></div>
-            Project Management
-            </a>
             <a class="nav-link" href="{{route('user.index')}}">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-user-secret"></i></div>
                 User Management
             </a>
+            <a class="nav-link" href="{{route('project.index')}}">
+                <div class="sb-nav-link-icon"><i class="fa-solid fa-file"></i></div>
+            Project Management
+            </a>
+         
          
             <a class="nav-link" href="{{route('employee.index')}}">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
                 Employee Management
+            </a>
+            <a class="nav-link" href="{{route('timesheet.index')}}">
+                <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
+                Timesheet Management
             </a>
             <a class="nav-link" href="{{route('leave.index')}}">
                 <div class="sb-nav-link-icon"> <i class="fa-regular fa-calendar"></i></div>
@@ -54,13 +59,13 @@
             @else
 
             @if(isset($id))
-            <a class="nav-link" href="{{route('project.timesheet',$projects->id)}}">
+            <a class="nav-link" href="{{route('timesheet.create',$projects->id)}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
                 Timesheet
             </a>
             @else
        
-            <a class="nav-link" href="">
+            <a class="nav-link" href="{{route('profile.edit')}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-user"></i></div>
                 View Profile
             </a>

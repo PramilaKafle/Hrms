@@ -36,7 +36,7 @@
                         </div>
                         <div class="form-group">
                             <label for="" class="form-label">Project Name:</label>
-                            <select id="" class="form-control" name="project_id[]" multiple>
+                            <select id="multipleselect" class="form-control" name="project_id[]" multiple>
                                 @foreach ($projects as $project)
                                     <option value="{{ $project->id }}">
                                         {{ $project->name }}</option>

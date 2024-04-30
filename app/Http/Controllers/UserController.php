@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Employee;
 use App\Repositories\UserRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\BaseRepository;
 
 class UserController extends Controller
 {   private UserRepository $userRepository;
@@ -19,7 +20,7 @@ class UserController extends Controller
     {
       
        $this->userRepository= $userRepository;
-       $this->roleRepository= $roleRepository;
+       $this->roleRepository=  $roleRepository;
        
        $this->middleware('CheckPermission:create')->except('index','show');
        $this->middleware('CheckPermission:view')->only(['index','show']);

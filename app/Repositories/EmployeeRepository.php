@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 use App\Repositories\BaseRepository;
-
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Employee;
 use App\Models\User;
@@ -60,4 +60,13 @@ class EmployeeRepository extends BaseRepository{
     return redirect()->route('employee.index')->with('success', 'Project assigned to employee successfully.');
   }
 
+  public function  getUserByEmpid($id)
+  {
+    $userId = DB::table('employees')
+                 ->select('user_id')
+                 ->where('id', $id)
+                 ->value('user_id');
+    return $userId;
+
+}
 }

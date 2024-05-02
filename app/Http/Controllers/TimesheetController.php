@@ -51,29 +51,31 @@ class TimesheetController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $data =$request->validate([
-            'Date'=>['required','date'],
-            'working_hour'=>['required','numeric','regex:/^\d+(\.\d{1,2})?$/','not_in:0'],
-            'project_id'=>[],
-            'employee_id'=>[],
+        // Validate the request data using specified rules
+        $data = $request->validate([
+            '*.id'=>[],
+            '*.Date' => ['required', 'date'],
+            '*.working_hour' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'not_in:0'],
+            '*.project_id' => [],
+            '*.employee_id' => [],
         ]);
-        $data=$request->all();
-     
         $this->timesheetRepository->store($data);
-        if ($request->ajax()) {
-        return response()->json(['message' => 'Timesheet Data stored successfully', 'data' => $data]);
-       
-        }
-      
+           if ($request->ajax()) {
+            return response()->json(['message' => 'Timesheet Data stored successfully', 'data' => $data]);
+           
+            }
+
     }
+    
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-       
+        $employee=$this->employeeRepository->getUserByEmpid($id);
+        dd($employee);
+       return view('Timesheet.User.viewtimesheet');
     }
 
     /**
@@ -87,22 +89,22 @@ class TimesheetController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
+    // public function update(Request $request, string $id)
+    // {
          
-        $data =$request->validate([
-            'Date'=>['required','date'],
-            'working_hour'=>['required','numeric','regex:/^\d+(\.\d{1,2})?$/','gt:0'],
-            'project_id'=>[],
-            'employee_id'=>[],
-        ]);
-         $this->timesheetRepository->update($id,$data);
+    //     $data =$request->validate([
+    //         'Date'=>['required','date'],
+    //         'working_hour'=>['required','numeric','regex:/^\d+(\.\d{1,2})?$/','gt:0'],
+    //         'project_id'=>[],
+    //         'employee_id'=>[],
+    //     ]);
+    //      $this->timesheetRepository->update($id,$data);
        
-        if ($request->ajax()) {
-            return response()->json(['message' => 'Timesheet Data edited successfully','data' => $data ]);
+    //     if ($request->ajax()) {
+    //         return response()->json(['message' => 'Timesheet Data edited successfully','data' => $data ]);
            
-            }
-    }
+    //         }
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -110,8 +112,6 @@ class TimesheetController extends Controller
     public function deletedata(Request $request ,string $id)
     {
         
-        //dd($id);
-       //$data=Timesheet::find($id);
        $this->timesheetRepository->delete($id);
         if ($request->ajax()) {
           

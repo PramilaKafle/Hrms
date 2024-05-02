@@ -15,12 +15,56 @@ $(document).ready(function () {
 
 });
 
+let timesheetdata = [];
+
+// saving calendar input data
+$('#timesheet-btn').click(function () {
+  var selectedMonth = parseInt($('#month').val());
+  let calendarData = []; 
+
+  $('.content').each(function () {
+    const editedContent = $(this).text(); // Get the edited content
+    const date = $(this).data('date');
+    const projectId = $('#project').val();
+    const employeeId = $('#employee_id').val();
+    const timesheetId = $(this).data('timesheet-id') ? $(this).data('timesheet-id') : '';
+    const isEdited = $(this).data('edited');
+    const currentDateMonth= new Date(date).getMonth()+1;
+    
+    // Check if content was edited
+    if (isEdited && (currentDateMonth == selectedMonth)) {
+      console.log(currentDateMonth);
+       const items={
+        timesheetId:timesheetId,
+        editedContent: editedContent,
+        date: date,
+        projectId: projectId,
+        employeeId: employeeId
+
+      };   
+      calendarData.push(items);  
+      $(this).data('edited', false);
+    }
+  });
+
+  if (calendarData.length > 0) {
+    timesheetdata.push(...calendarData);
+     //console.log(timesheetdata);
+
+     saveCalendarData(timesheetdata);
+     timesheetdata=[];
+  }
+
+});
+// saving calendar input ends here
+
 function reloadCalendar(selectedMonth, selectedProject) {
   var currentYear = new Date().getFullYear();
   var startDate = new Date(currentYear, selectedMonth - 1, 1);
   var endDate = new Date(currentYear, selectedMonth, 0);
-
+  $('.content').data('edited', false);
   $('#calendar').empty(); // Clear existing calendar
+ 
   var calendar = createCalendar(startDate, endDate, selectedProject);
   $('#calendar').append(calendar);
 }
@@ -64,16 +108,15 @@ function createCalendar(startDate, endDate, selectedProject) {
       const dayOfWeek = $('<span>').addClass('day-of-week').text(currentDate.getDate());
       dayEl.append(dayOfWeek);
 
-      // const contentEl = $('<span>').addClass('content').text('0.00');
-      //console.log(new Date(currentDate));
       const date = moment(currentDate.toString()).format('YYYY-MM-DD');
       const matchingEntry = calendarData.data.find(entry => entry.Date === date);
-      //console.log(matchingEntry);
+   
       const currentDayMonth = new Date(date).getMonth() + 1;
       const selectedMonth = ($('#month').val());
+
       const contentEl = $('<span>').addClass('content').attr('data-date', date);
       if (matchingEntry) {
-        contentEl.text(matchingEntry.working_hour).addClass('hours');
+        contentEl.text(matchingEntry.working_hour).attr('data-timesheet-id', matchingEntry.id);
         if (currentDayMonth == selectedMonth) {
           const deleteBtn = $('<button>').addClass('btn btn-danger delete-btn').text('Delete');
           deleteBtn.on('click', function () {
@@ -94,8 +137,6 @@ function createCalendar(startDate, endDate, selectedProject) {
       else {
         contentEl.text('0.00');
       }
-
-
       if (dayEl.hasClass('dull')) {
         contentEl.attr('contenteditable', false);
       }
@@ -104,8 +145,7 @@ function createCalendar(startDate, endDate, selectedProject) {
       }
 
 
-      // to insert working_hours in the timesheet
-
+      //to insert working_hours in the timesheet
       contentEl.on('focus', function () {
         $(this).data('previousContent', $(this).text()); // Store previous content when element gains focus
       });
@@ -117,53 +157,26 @@ function createCalendar(startDate, endDate, selectedProject) {
         // Check if content has been edited
         if (editedContent !== previousContent) {
           $(this).data('edited', true);
+
         } else {
           $(this).data('edited', false);
         }
+
       });
 
-      $('#timesheet-btn').click(function () {
-        contentEl.each(function () {
-
-          const editedContent = $(this).text(); // Get the edited content
-
-          const date = $(this).data('date');
-          const projectId = $('#project').val();
-          const employeeId = $('#employee_id').val();
-          if ($(this).data('edited')) {
-            if (currentDayMonth == selectedMonth) {
-              if (matchingEntry) {
-
-                editCalendarData(editedContent, date, projectId, employeeId, matchingEntry.id);
-                $(this).data('edited', false);
-
-              }
-              else {
-                saveCalendarData(editedContent, date, projectId, employeeId);
-                $(this).data('edited', false);
-              }
-
-
-            }
-
-
-          }
-        })
-      });
       // end of working_hour
       dayEl.append(contentEl);
 
       days.append(dayEl);
+
+     
+
     }
   });
 
   calendar.append(days);
   return calendar;
 }
-
-
-
-
 
 
 
@@ -185,29 +198,41 @@ function getCalendarData($selectedProject, callback) {
   });
 }
 
-function saveCalendarData(editedContent, date, projectId, employeeId) {
-  $.ajax({
-    type: "post",
-    url: '/projectdash/' + projectId + '/timesheet/store',
-    data: {
+function saveCalendarData(timesheetdata) {
+  let requestData = [];
+  timesheetdata.forEach(item => {
+    let date = item.date;
+    let editedContent = item.editedContent;
+    let projectId = item.projectId;
+    let employeeId = item.employeeId;
+    let timesheetId = item.timesheetId;
+
+    // Push formatted data for each item into the requestData array
+    requestData.push({
+      id: timesheetId,
       Date: date,
       working_hour: editedContent,
       project_id: projectId,
       employee_id: employeeId
+    });
+  });
 
-    },
+  //console.log(requestData);
+  $.ajax({
+    type: "post",
+    url: '/projectdash/batch/timesheet/store-data', // Specify your endpoint for batch processing
+    data: JSON.stringify(requestData),
+    contentType: 'application/json', // Set content type to JSON
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in header
     },
     success: function (response) {
       console.log("Data added success", response);
-      // var message=response.message;
-      // alert(message);
       $('#response-container').css('display', 'block');
       $('#response-container').html('<p>' + response.message + '</p>');
       $('#response-container').fadeOut(2000);
+  
       reloadCalendar($('#month').val(), $('#project').val());
-
     },
     error: function (xhr, status, error) {
       //console.log("error occured",error);
@@ -218,49 +243,52 @@ function saveCalendarData(editedContent, date, projectId, employeeId) {
         $('#response-container').html('<p>' + errors.working_hour + '</p>');
         $('#response-container').fadeOut(3000);
       }
+
       reloadCalendar($('#month').val(), $('#project').val());
+
     }
   });
+
 }
 
-function editCalendarData(editedContent, date, projectId, employeeId, timesheetid) {
-  $.ajax({
-    type: "post",
-    url: '/projectdash/' + timesheetid + '/timesheet/edit-data',
-    data: {
-      id: timesheetid,
-      Date: date,
-      working_hour: editedContent,
-      project_id: projectId,
-      employee_id: employeeId
+// function editCalendarData(editedContent, date, projectId, employeeId, timesheetid) {
+//   $.ajax({
+//     type: "post",
+//     url: '/projectdash/' + timesheetid + '/timesheet/edit-data',
+//     data: {
+//       id: timesheetid,
+//       Date: date,
+//       working_hour: editedContent,
+//       project_id: projectId,
+//       employee_id: employeeId
 
-    },
+//     },
 
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in header
-    },
-    success: function (response) {
-      // console.log("Data added success",response);
-      $('#response-container').css('display', 'block');
-      $('#response-container').html('<p>' + response.message + '</p>');
-      $('#response-container').fadeOut(3000);
-      reloadCalendar($('#month').val(), $('#project').val());
+//     headers: {
+//       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in header
+//     },
+//     success: function (response) {
+//       // console.log("Data added success",response);
+//       $('#response-container').css('display', 'block');
+//       $('#response-container').html('<p>' + response.message + '</p>');
+//       $('#response-container').fadeOut(3000);
+//       reloadCalendar($('#month').val(), $('#project').val());
 
 
-    },
-    error: function (xhr, status, error) {
-      console.log("error occured", error);
-      const errors = xhr.responseJSON.errors;
-      if (errors) {
-        console.log(errors.working_hour);
-        $('#response-container').css('display', 'block');
-        $('#response-container').html('<p>' + errors.working_hour + '</p>');
-        $('#response-container').fadeOut(3000);
-      }
-      reloadCalendar($('#month').val(), $('#project').val());
-    }
-  });
-}
+//     },
+//     error: function (xhr, status, error) {
+//       console.log("error occured", error);
+//       const errors = xhr.responseJSON.errors;
+//       if (errors) {
+//         console.log(errors.working_hour);
+//         $('#response-container').css('display', 'block');
+//         $('#response-container').html('<p>' + errors.working_hour + '</p>');
+//         $('#response-container').fadeOut(3000);
+//       }
+//       reloadCalendar($('#month').val(), $('#project').val());
+//     }
+//   });
+// }
 
 function deleteCalendarData(timesheetid) {
   console.log(timesheetid);

@@ -58,8 +58,7 @@ Route::middleware('auth')->group(function () {
 
         Route::group(['prefix' => '{project}/timesheet'], function () {
             Route::get('/', [TimesheetController::class, 'create'])->name('timesheet.create');
-            Route::post('/store', [TimesheetController::class, 'store'])->name('timesheet.store');
-            Route::post('/edit-data', [TimesheetController::class, 'update'])->name('timesheet.update');
+            Route::post('/store-data', [TimesheetController::class, 'store'])->name('timesheet.store');
             Route::get('/get-data', [TimesheetController::class, 'gettimesheetdata'])->name('timesheet.getdata');
             Route::post('/delete-data', [TimesheetController::class, 'deletedata'])->name('timesheet.deletedata');
         });

@@ -55,17 +55,26 @@
                 <div class="sb-nav-link-icon"> <i class="fa-regular fa-calendar"></i></div>
             leave Management
             </a>
+            <a class="nav-link" href="">
+                <div class="sb-nav-link-icon"> <i class="fa-solid fa-file-export"></i></div>
+            Report
+            </a>
           
             @else
 
             @if(isset($id))
+            <a class="nav-link" href="{{route('timesheet.view',$projects->id)}}">
+                <div class="sb-nav-link-icon"><i class="fa-solid fa-eye"></i></div>
+                View Timesheet
+            </a>
             <a class="nav-link" href="{{route('timesheet.create',$projects->id)}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
                 Timesheet
             </a>
+           
             @else
        
-            <a class="nav-link" href="{{route('profile.edit')}}">
+            <a class="nav-link" href="">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-user"></i></div>
                 View Profile
             </a>

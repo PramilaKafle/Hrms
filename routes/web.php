@@ -41,11 +41,13 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('employee', EmployeeController::class);
     Route::resource('/user',UserController::class);
+   
     Route::resource('/role',RoleController::class);
   
     Route::resource('/leave',LeaveRequestController::class);
     Route::resource('/project',ProjectController::class);
     Route::resource('/timesheet',TimesheetController::class);
+    Route::post('/timesheet/generate-data',[TimesheetController::class,'generatedata'])->name('timesheet.generate');
 
     Route::get('/assign',[EmployeeController::class,'projectassign'])->name('employee.assign');
     Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');
@@ -55,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'projectdash'], function () {
         Route::get('/', [ProjectController::class, 'dashboard'])->name('project.dashboard');
         Route::get('/{project}', [ProjectController::class, 'getProject'])->name('project.selected');
+        Route::get('/{project}/get-data',[TimesheetController::class,'gettimesheetdata'])->name('timesheet.view');
 
         Route::group(['prefix' => '{project}/timesheet'], function () {
             Route::get('/', [TimesheetController::class, 'create'])->name('timesheet.create');

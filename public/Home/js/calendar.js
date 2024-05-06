@@ -11,8 +11,6 @@ $(document).ready(function () {
     $('#timesheet-btn').removeClass('hidden');
   }
 
-
-
 });
 
 let timesheetdata = [];
@@ -31,9 +29,9 @@ $('#timesheet-btn').click(function () {
     const isEdited = $(this).data('edited');
     const currentDateMonth= new Date(date).getMonth()+1;
     
-    // Check if content was edited
+  
     if (isEdited && (currentDateMonth == selectedMonth)) {
-      console.log(currentDateMonth);
+      //console.log(currentDateMonth);
        const items={
         timesheetId:timesheetId,
         editedContent: editedContent,
@@ -49,7 +47,6 @@ $('#timesheet-btn').click(function () {
 
   if (calendarData.length > 0) {
     timesheetdata.push(...calendarData);
-     //console.log(timesheetdata);
 
      saveCalendarData(timesheetdata);
      timesheetdata=[];
@@ -220,11 +217,11 @@ function saveCalendarData(timesheetdata) {
   //console.log(requestData);
   $.ajax({
     type: "post",
-    url: '/projectdash/batch/timesheet/store-data', // Specify your endpoint for batch processing
+    url: '/projectdash/batch/timesheet/store-data', 
     data: JSON.stringify(requestData),
     contentType: 'application/json', // Set content type to JSON
     headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in header
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
     },
     success: function (response) {
       console.log("Data added success", response);
@@ -235,15 +232,32 @@ function saveCalendarData(timesheetdata) {
       reloadCalendar($('#month').val(), $('#project').val());
     },
     error: function (xhr, status, error) {
-      //console.log("error occured",error);
-      const errors = xhr.responseJSON.errors;
-      if (errors) {
-        console.log(errors);
-        $('#response-container').css('display', 'block');
-        $('#response-container').html('<p>' + errors.working_hour + '</p>');
-        $('#response-container').fadeOut(3000);
-      }
+      try {
+        const errors = xhr.responseJSON.errors;
+        //console.log(errors);
+        
+        if (errors) {
+         
+            const workingHourErrors = errors['0.working_hour'];
+            //console.log(workingHourErrors);
 
+            if (workingHourErrors && Array.isArray(workingHourErrors) && workingHourErrors.length > 0) {
+                
+                let errorMessageHtml = '<ul>';
+                workingHourErrors.forEach(errorMessage => {
+                    errorMessageHtml += '<li>' + errorMessage + '</li>';
+                });
+                errorMessageHtml += '</ul>';
+
+                // Display error message in response container
+                $('#response-container').css('display', 'block');
+                $('#response-container').html(errorMessageHtml);
+                $('#response-container').fadeOut(3000);
+            }
+        }
+    } catch (e) {
+        console.error("Error occurred while processing error response:", e);
+    }
       reloadCalendar($('#month').val(), $('#project').val());
 
     }

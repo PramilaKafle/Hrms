@@ -28,9 +28,9 @@ class TimesheetController extends Controller
       $timesheetdataes= $this->timesheetRepository->all();
       $projects=Project::all();
       $users=User::all();
-      $employee=$this->employeeRepository->all();
+      $employees=$this->employeeRepository-> getEmployeeOnly();
        
-       return view('Timesheet.User.index',compact('timesheetdataes','projects','users','employee'));
+       return view('Timesheet.User.index',compact('timesheetdataes','projects','users','employees'));
     }
 
     /**
@@ -55,7 +55,7 @@ class TimesheetController extends Controller
         $data = $request->validate([
             '*.id'=>[],
             '*.Date' => ['required', 'date'],
-            '*.working_hour' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'not_in:0'],
+            '*.working_hour' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'not_in:0','max:24'],
             '*.project_id' => [],
             '*.employee_id' => [],
         ]);
@@ -119,6 +119,7 @@ class TimesheetController extends Controller
         }
            
     }
+  
     public function gettimesheetdata(Request $request ,string $id)
     {
         
@@ -129,7 +130,21 @@ class TimesheetController extends Controller
         
         return response()->json(['message' => 'Data taken successfully', 'data' => $timesheet]);
            
-       
+       // return view('Timesheet.User.viewtimesheet',compact('timesheet','id'));
+    }
+
+    public function generatedata(Request $request)
+
+    { 
+        $data=$request->validate([
+            'project_id' => ['required'], 
+             'employee_id' => ['required'],
+             'start_date' => ['required', 'date'],
+             'end_date' => ['required', 'date', 'after_or_equal:startdate'],
+        ]);
+        //$data= $request->all();
+       $timesheets=  $this->timesheetRepository->generateTimesheetData($data);
+         return response()->json(['timesheets' => $timesheets]);  
     }
    
 

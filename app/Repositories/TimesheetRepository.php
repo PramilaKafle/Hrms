@@ -5,6 +5,8 @@ use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Timesheet;
 use App\Models\Employee;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 class TimesheetRepository extends BaseRepository
 {
     public function __construct( ){
@@ -44,6 +46,7 @@ public function store(array $entries)
 
     public function gettimesheetdata($projects,$employees)
     {
+        //dd($employees);
         $timesheets = Timesheet::where('project_id', $projects->id)
                             ->where('employee_id', $employees->id)
                             ->get();
@@ -51,5 +54,22 @@ public function store(array $entries)
     return $timesheets;
 
     }
+
+   public function  generateTimesheetData($data)
+   {
+    
+    $carbonStartDate = Carbon::createFromFormat('m/d/Y', $data['start_date']);
+    $carbonEndDate= Carbon::createFromFormat('m/d/Y',$data['end_date']);
+    $startDate = $carbonStartDate->format('Y-m-d');
+    $endDate = $carbonEndDate->format('Y-m-d');
+
+     $employee = DB::select('select id from employees where user_id = ?', [$data['employee_id']]);
+     $employeeid = $employee[0]->id;
+     $timesheet = DB::select('select * from timesheets where project_id = ? AND employee_id = ? AND Date BETWEEN ? AND ?', 
+                      [$data['project_id'],$employeeid,  $startDate, $endDate]);
+
+   
+     return $timesheet;
+   }
    
 }

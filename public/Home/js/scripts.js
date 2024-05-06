@@ -24,3 +24,9 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 });
 
+$(document).ready(function() {
+    $('#startdate, #enddate').datepicker({
+        format: 'yyyy-mm-dd', 
+        autoclose: true       
+    });
+});

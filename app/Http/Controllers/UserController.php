@@ -22,9 +22,9 @@ class UserController extends Controller
        $this->userRepository= $userRepository;
        $this->roleRepository=  $roleRepository;
        
-       $this->middleware('CheckPermission:create')->except('index','show');
-       $this->middleware('CheckPermission:view')->only(['index','show']);
-       $this->middleware('CheckPermission:delete')->only('destroy');
+    //    $this->middleware('CheckPermission:create')->except('index','show');
+    //    $this->middleware('CheckPermission:view')->only(['index','show']);
+    //    $this->middleware('CheckPermission:delete')->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -106,4 +106,6 @@ class UserController extends Controller
         $this->userRepository->delete($id);
         return redirect()->route('user.index');
     }
+
+
 }

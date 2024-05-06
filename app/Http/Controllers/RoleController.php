@@ -33,7 +33,10 @@ class RoleController extends Controller
     //    $this->middleware('CheckPermission:view_role')->only('show');
     }
     public function index(Request $request)
+
+
     {
+        //dd(session()->all());
         $page = $request->input('page', 1);
       $roles =$this->roleRepository->all($page);
       return view('Role.role',compact('roles'));

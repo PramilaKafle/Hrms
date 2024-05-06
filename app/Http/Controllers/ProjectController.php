@@ -8,15 +8,18 @@ use App\Models\Employee;
 use App\Models\User;
 // use App\Interfaces\BaseRepositoryInterface;
 use App\Repositories\ProjectRepository;
+use App\Repositories\TimesheetRepository;
 use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     private ProjectRepository $projectRepository;
+    private TimesheetRepository $timesheetRepository;
 
-    public function __construct( ProjectRepository $projectRepository)
+    public function __construct( ProjectRepository $projectRepository,TimesheetRepository $timesheetRepository)
     {
       
        $this->projectRepository= $projectRepository;
+       $this->timesheetRepository= $timesheetRepository;
     }
     public function index(Request $request)
 
@@ -93,8 +96,11 @@ class ProjectController extends Controller
   public function getProject(string $id)
   {
     $projects=$this->projectRepository->getById($id);
- 
-     return view('project.projectdash',compact('projects','id'));
+    $user=auth()->user();
+    $employees = Employee::where('user_id', $user->id)->first();
+    $timesheets =$this->timesheetRepository->gettimesheetdata($projects,$employees);
+   //dd($timesheet);
+     return view('project.projectdash',compact('projects','timesheets','employees','id'));
   }
 
 

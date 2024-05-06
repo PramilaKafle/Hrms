@@ -26,8 +26,6 @@ class ProjectRepository extends BaseRepository{
         $projects= Project::all();
       
     }
-       
-       
          return $projects;
     }
   

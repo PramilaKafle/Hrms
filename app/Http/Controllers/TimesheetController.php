@@ -87,26 +87,6 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    // public function update(Request $request, string $id)
-    // {
-         
-    //     $data =$request->validate([
-    //         'Date'=>['required','date'],
-    //         'working_hour'=>['required','numeric','regex:/^\d+(\.\d{1,2})?$/','gt:0'],
-    //         'project_id'=>[],
-    //         'employee_id'=>[],
-    //     ]);
-    //      $this->timesheetRepository->update($id,$data);
-       
-    //     if ($request->ajax()) {
-    //         return response()->json(['message' => 'Timesheet Data edited successfully','data' => $data ]);
-           
-    //         }
-    // }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function deletedata(Request $request ,string $id)
@@ -119,6 +99,14 @@ class TimesheetController extends Controller
         }
            
     }
+    public function viewtimesheet(string $id)
+    {
+        $projects = Project::findOrFail($id);
+        $user=auth()->user();
+        $employees = Employee::where('user_id', $user->id)->first();
+        $timesheets =$this->timesheetRepository->gettimesheetdata( $projects,$employees);
+        return view('Timesheet.viewtimesheet',compact('id','projects','employees','timesheets'));
+    }
   
     public function gettimesheetdata(Request $request ,string $id)
     {
@@ -129,8 +117,6 @@ class TimesheetController extends Controller
         $timesheet=$this->timesheetRepository->gettimesheetdata($projects,$employees);
         
         return response()->json(['message' => 'Data taken successfully', 'data' => $timesheet]);
-           
-       // return view('Timesheet.User.viewtimesheet',compact('timesheet','id'));
     }
 
     public function generatedata(Request $request)
@@ -146,6 +132,6 @@ class TimesheetController extends Controller
        $timesheets=  $this->timesheetRepository->generateTimesheetData($data);
          return response()->json(['timesheets' => $timesheets]);  
     }
-   
+  
 
 }

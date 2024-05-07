@@ -96,11 +96,7 @@ class ProjectController extends Controller
   public function getProject(string $id)
   {
     $projects=$this->projectRepository->getById($id);
-    $user=auth()->user();
-    $employees = Employee::where('user_id', $user->id)->first();
-    $timesheets =$this->timesheetRepository->gettimesheetdata($projects,$employees);
-   //dd($timesheet);
-     return view('project.projectdash',compact('projects','timesheets','employees','id'));
+     return view('project.projectdash',compact('projects','id'));
   }
 
 

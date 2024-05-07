@@ -7,26 +7,33 @@
 // Scripts
 // 
 
-window.addEventListener('DOMContentLoaded', event => {
-
+$(document).ready(function() {
     // Toggle the side navigation
-    const sidebarToggle = document.body.querySelector('#sidebarToggle');
-    if (sidebarToggle) {
+    const sidebarToggle = $('#sidebarToggle');
+    if (sidebarToggle.length > 0) {
         // Uncomment Below to persist sidebar toggle between refreshes
         // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-        //     document.body.classList.toggle('sb-sidenav-toggled');
+        //     $('body').toggleClass('sb-sidenav-toggled');
         // }
-        sidebarToggle.addEventListener('click', event => {
+        sidebarToggle.on('click', function(event) {
             event.preventDefault();
-            document.body.classList.toggle('sb-sidenav-toggled');
-            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+            $('body').toggleClass('sb-sidenav-toggled');
+            localStorage.setItem('sb|sidebar-toggle', $('body').hasClass('sb-sidenav-toggled'));
         });
     }
 });
+
+
 
 $(document).ready(function() {
     $('#startdate, #enddate').datepicker({
         format: 'yyyy-mm-dd', 
         autoclose: true       
+    });
+
+    $('#start_date, #end_date').datepicker({
+        dateFormat: 'yy-mm-dd',
+        autoclose: true     
+        
     });
 });

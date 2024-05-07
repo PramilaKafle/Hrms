@@ -49,4 +49,20 @@ $users =User::whereNotIn('id',$employeeids)->paginate(5);
 return $users;
 }
 
+public function uploadImage(array $data, string $id)
+{
+    $user=User::findOrFail($id);
+    if (isset($data['image']) && $data['image']->isValid()) {
+        $image = $data['image'];
+        $imageName = time() . '_' . $image->getClientOriginalName();
+
+        $imagepath=  $image->move(public_path('images'), $imageName);
+        $user->image = 'images/'.$imageName;
+        $user->save();
+        return redirect()->back()->with('success', 'Image uploaded successfully');
+    }
+    return redirect()->back()->with('error', 'Failed to upload image');
+  
+}
+
 }

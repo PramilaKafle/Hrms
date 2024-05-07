@@ -107,5 +107,23 @@ class UserController extends Controller
         return redirect()->route('user.index');
     }
 
+    public function profile()
+    {
+        $user=auth()->user();
+        $userid=$user->id;
+        $users=$this->userRepository->getById($userid);
+        $employee=Employee::where('user_id',$userid)->first();
+        return view('Employee.profile',compact('users','employee'));
+    }
 
+    public function storeImage(Request $request,string $id)
+    {
+       //$user=$this->userRepository->getById($id);
+       $data=$request->validate([
+        'image'=>['required','image']
+       ]);
+       $this->userRepository->uploadImage($data,$id);
+      
+       return redirect()->back();
+    }
 }

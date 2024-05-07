@@ -22,8 +22,11 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">
-                            <!-- Column for image -->
-
+                            @if (is_null($user->image) || $user->image === '')
+                            <h1><strong>No Image Found</strong></h1>
+                            @else
+                            <img width="" src="{{ asset($user->image) }}" alt="">
+                            @endif
                         </div>
                         <div class="col-md-8">
                             <!-- Column for data -->

@@ -51,7 +51,7 @@ public function store(array $entries)
                             ->where('employee_id', $employees->id)
                             ->get();
     
-    return $timesheets;
+        return $timesheets;
 
     }
 
@@ -71,5 +71,28 @@ public function store(array $entries)
    
      return $timesheet;
    }
+
+   public function getreportdata($data)
+   {
+    //    $timesheet=DB::select('select *
+    //    from timesheets where Date BETWEEN ? AND  ?',
+    //     [$data['start_date'],$data['end_date']]);
+    
+    $startDate = $data['start_date'];
+    $endDate = $data['end_date'];
+
+    $timesheet = DB::select('
+        SELECT u.name, t.*
+        FROM timesheets t
+        JOIN employees e ON t.employee_id = e.id
+        JOIN users u ON e.user_id = u.id
+        WHERE t.Date BETWEEN ? AND ?
+    ', [$startDate, $endDate]);
+
+    return $timesheet;
+
+   }
+
+
    
 }

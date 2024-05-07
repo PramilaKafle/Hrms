@@ -55,7 +55,7 @@
                 <div class="sb-nav-link-icon"> <i class="fa-regular fa-calendar"></i></div>
             leave Management
             </a>
-            <a class="nav-link" href="">
+            <a class="nav-link" href="{{route('report.index')}}">
                 <div class="sb-nav-link-icon"> <i class="fa-solid fa-file-export"></i></div>
             Report
             </a>
@@ -69,14 +69,14 @@
             </a>
             <a class="nav-link" href="{{route('timesheet.create',$projects->id)}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
-                Timesheet
+               Add Timesheet
             </a>
            
             @else
        
-            <a class="nav-link" href="">
+            <a class="nav-link" href="{{route('user.profile')}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-user"></i></div>
-                View Profile
+                 Profile
             </a>
             {{-- <a class="nav-link" href="{{route('timesheet.index')}}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>

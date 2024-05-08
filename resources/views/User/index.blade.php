@@ -15,7 +15,7 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-6">
-                <a class="btn btn-success " href="{{route('user.create')}}"><i class="fa-solid fa-plus"></i>Add User</a>
+                <a class="btn btn-success " href="{{route('user.create')}}"><i class="fa-solid fa-plus"></i>New User</a>
             </div>
             <div class="col-md-6  d-flex justify-content-end">
                

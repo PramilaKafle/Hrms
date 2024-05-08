@@ -21,7 +21,12 @@ class ReportController extends Controller
         $employees=$this->employeeRepository->getEmployeeOnly();
         return view('Report.index',compact('employees'));
     }
+   public function monthlytimesheet()
+   {
+    $employees=$this->employeeRepository->getEmployeeOnly();
+        return view('Report.monthlytimesheet',compact('employees'));
 
+   }
     public function getdata(Request $request)
     {
         $data=$request->all();

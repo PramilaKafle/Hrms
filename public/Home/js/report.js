@@ -1,3 +1,4 @@
+// for monthy timesheet report generation
 $(document).ready(function () {
 
     $('#report-generate').click(function (e) {
@@ -8,7 +9,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'post',
-            url: '/report/get-data',
+            url: '/report/monthlytimesheet/get-data',
             data:
             {
                 start_date: StartDate,
@@ -20,7 +21,7 @@ $(document).ready(function () {
             success: function (response) {
                 console.log(response);
                 DisplayTimesheetTable(response, StartDate, EndDate);
-
+              // DisplayTimesheet(response);
             },
             error: function (xhr, status, error) {
                 //const errors = xhr.responseJSON.errors;
@@ -31,54 +32,70 @@ $(document).ready(function () {
 });
 
 
+// function DisplayTimesheet(response)
+// { 
+//     //tableHtml ='<table class="table"> <thead> <tr><th>EmployeeName</th>';
+//    response.data.forEach(function(entry){
+//      var employeeId=entry.id;
+    
+     
+//    }); 
+//    $('#report-table').html(tableHtml);
+// }
+
 function DisplayTimesheetTable(response, StartDate, EndDate) {
     var startDate = new Date(StartDate);
     var endDate = new Date(EndDate);
-    var monthsApart = getmonthsapart(startDate, endDate);
 
-    var timesheetByEmployee = {};
+    var monthsApart = getmonthsapart(startDate, endDate);
+    tableHtml = '<table class="table mt-4" ><thead class="monthlytimesheethead"><tr><th>Employee Name </th>';
+
+    currentDate = new Date(startDate);
+    for (var i = 0; i < monthsApart; i++) {
+        var year = currentDate.getFullYear();
+        var monthname = currentDate.toLocaleDateString('en-us', { month: 'long' });
+        tableHtml += '<th>' + monthname + ' ' + year + '</th>';
+
+        currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+    tableHtml += '</tr></thead><tbody>';
+
+    timesheetByEmployee = {};
+
     response.data.forEach(function (entry) {
         var employeeId = entry.employee_id;
         var employeeName = entry.name;
         var date = new Date(entry.Date);
         var monthKey = date.getFullYear() + '-' + (date.getMonth() + 1);
-        // console.log(monthKey);
-
         if (!timesheetByEmployee[employeeId]) {
             timesheetByEmployee[employeeId] = { name: employeeName };
         }
-
-
         if (!timesheetByEmployee[employeeId][monthKey]) {
             timesheetByEmployee[employeeId][monthKey] = [];
         }
-
         timesheetByEmployee[employeeId][monthKey].push(entry.working_hour);
-
     });
     console.log(timesheetByEmployee);
-    var tableHtml = '<table  class="table"><thead><tr><th>Employee Name</th>';
 
-    // Loop through each month within the date range to create table headers
-    var currentDate = new Date(startDate);
-    for (var i = 0; i < monthsApart; i++) {
-        var monthName = currentDate.toLocaleString('en', { month: 'long' });
-        var year = currentDate.getFullYear();
-        //var month = currentDate.getMonth()+1;
-
-        tableHtml += '<th>' + monthName + ' ' + year + '</th>';
-        currentDate.setMonth(currentDate.getMonth() + 1);
-    }
-
-    tableHtml += '</tr></thead><tbody>';
-     Object.keys(timesheetByEmployee).forEach(function(employeeId){
+    Object.keys(timesheetByEmployee).forEach(function (employeeId) {
         var employeename=timesheetByEmployee[employeeId].name;
-        console.log(employeename);
-        tableHtml +='<tr><td>'+employeename+'</td>';
-     });
-        
-    
-    tableHtml += '</tbody></table>';
+       tableHtml +='<tr><td>'+employeename+'</td>';
+       var currentDate =new Date(startDate);
+       for(var j=0; j< monthsApart ; j++)
+        {
+            monthkey = currentDate.getFullYear()+ '-' + (currentDate.getMonth()+1);
+            monthentries = timesheetByEmployee[employeeId][monthkey] || [];
+            var totalworkinghours = monthentries.reduce(function(sum, hours){
+                return sum + parseFloat(hours);
+            },0);
+
+            tableHtml +='<td>'+totalworkinghours +'</td>';
+            currentDate.setMonth(currentDate.getMonth()+1);
+        }
+         tableHtml +='</tr>';
+    });
+
+    tableHtml +='</tbody></table>';
 
     $('#report-table').html(tableHtml);
 }

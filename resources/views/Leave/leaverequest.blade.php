@@ -27,13 +27,13 @@
                         <div class="form-group row mb-4">
                             <label class="control-label col-sm-4 " for="start_date">Start Date</label>
                             <div class="col-sm-5"   data-date-format="mm-dd-yyyy">
-                                 <input type="date" class="form-control" id="start_date" name="start_date">
+                                 <input type="" class="form-control" id="from" name="start_date" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group row mb-4">
                             <label class="control-label col-sm-4 " for="end_date">End Date:</label>
                             <div class="col-sm-5">
-                                <input type="date" class="form-control" id="end_date" name="end_date">
+                                <input type="" class="form-control" id="to" name="end_date" autocomplete="off">
                             </div>
                         </div>
                           <div class="form-group row mb-4">

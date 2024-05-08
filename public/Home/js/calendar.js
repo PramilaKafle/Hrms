@@ -1,4 +1,4 @@
-
+// employee to submit timesheet
 
 $(document).ready(function () {
   $('#month').on('change', displayCalendar);

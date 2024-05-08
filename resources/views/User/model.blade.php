@@ -38,6 +38,11 @@
                                 @csrf
                                 @if(isset($user)) @method('PUT') @endif
                                 <div class="form-group row mb-4">
+                                    @if(isset($user))
+                                    <div>
+                                        <img style="width: 100px" src="{{asset($user->image)}}" alt="">
+                                    </div>
+                                    @endif
                                     <label class="control-label col-sm-2 " for="name">Image:</label>
                                     <div class="col-sm-8">
                                         <input type="file" class="form-control" id="image" name="image">

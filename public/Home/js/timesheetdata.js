@@ -1,5 +1,5 @@
 
-
+// for user to view ecah employee timesheet
     $(document).ready(function () {
         $('#timesheet-generate').click(function (e) {
             e.preventDefault();
@@ -73,8 +73,10 @@ function PopulateTimesheetData(response) {
         $('#timesheet-data-not-found').removeClass('hidden');
     }
 }
+// user timesheet view ends here
 
 
+// for the employee Timesheet View
 
 $(document).ready(function () {
     $('#monthselect').change(function(){
@@ -117,13 +119,14 @@ function UpdateTimesheetData(response,startDate,endDate)
     var tableBody = $('#timesheet-table-data tbody');
     tableBody.empty();
     var totalhours = 0;
-
-    $.each(response.data, function (index, data) {
+    var sl = 0;
+    
+    $.each(response.data, function (index,data) {
         var entryDate = moment(data.Date);  
         if (entryDate.isBetween(startDate, endDate)){
-           
+            sl++;
             var newRow = '<tr>' +
-                '<td>' + (index + 1) + '</td>' +
+                '<td>' + sl + '</td>' +
                 '<td>' + data.id + '</td>' +
                 '<td>' + data.Date + '</td>' +
                 '<td>' + data.working_hour + '</td>' +

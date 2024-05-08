@@ -26,14 +26,42 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-    $('#startdate, #enddate').datepicker({
-        format: 'yyyy-mm-dd', 
+    // for timesheets
+    $('#startdate, #enddate,#start_date, #end_date').datepicker({
+        dateFormat: 'yy-mm-dd', 
         autoclose: true       
     });
 
-    $('#start_date, #end_date').datepicker({
+    // for leave request
+    $('#from, #to').datepicker({
         dateFormat: 'yy-mm-dd',
-        autoclose: true     
+        autoclose: true ,
+        //minDate: 0 // Disable dates before today    
         
     });
+
+
+    //search for the leave request in user side
+    $('#searchInput').on('keyup', function() {
+        var searchText = $(this).val().toLowerCase(); 
+        $('tbody tr').each(function(){
+            var rowVisibility=false;
+            $(this).find('td').each(function(){
+              var celltext=$(this).text().toLowerCase();
+              if(celltext.includes(searchText))
+                {
+                    rowVisibility=true;
+                    return false; // Exit the loop early if match is found in current row
+                }
+            });
+
+            if (rowVisibility) {
+                $(this).show(); 
+            } else {
+                $(this).hide(); 
+            }
+        });
+       
+    });
+    
 });

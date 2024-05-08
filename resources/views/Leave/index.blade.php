@@ -10,8 +10,15 @@
         @if ($message = @session('error'))
             <div class="alert alert-danger">{{ $message }}</div>
         @endif
+        @cannot('hasEmployeeType')
+        <div class="input-group rounded justify-content-end mb-4">
+            <input type="search" class="form-group rounded"  id="searchInput" placeholder="Search" aria-label="Search">
+            
+          </div>
+        @endcannot
         <div class="card">
             @cannot('hasEmployeeType')
+         
                 <table class="table">
                     <thead style="background: #a7d7a3">
                         <tr>

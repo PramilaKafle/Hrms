@@ -37,10 +37,10 @@ class EmployeeController extends Controller
         
      }
 
-    public function index()
+    public function index(Request $request)
     {
-
-        $employees=$this->employeeRepository->getEmployeeOnly();
+        $page = $request->input('page', 1);
+        $employees=$this->employeeRepository->getEmployeeOnly($page);
         $empid =$this->employeeRepository->all();
         $project=$this->projectRepository->all();
         return view('Employee.index',compact('employees','empid','project'));
@@ -149,7 +149,7 @@ class EmployeeController extends Controller
     {
         //$user=$this->baseRepository->getById(User::class,$id);
        
-        $this->employeeRepository->delete($id);
+        $this->userRepository->delete($id);
         return redirect()->route('employee.index');
     }
 }

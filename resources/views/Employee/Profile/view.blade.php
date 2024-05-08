@@ -18,7 +18,7 @@
                         <h4>Profile</h4>
                     </div>
                     <div class="col-md-6 d-flex justify-content-end">
-                        {{-- <a class="btn btn-success mx-1" href="">Back</a> --}}
+                        <a class="btn btn-primary mx-1" href="">Edit</a>
                     </div>
                 </div>
             </div>
@@ -35,6 +35,11 @@
                                 </form>
                             @else
                             <img width="" src="{{ asset($users->image) }}" alt="">
+                            {{-- <form action="" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name="image_edit" accept="image">
+                                <button type="submit" class="btn btn-primary">Change Image</button>
+                            </form> --}}
                             @endif
 
                         </div>
@@ -53,6 +58,7 @@
                                     <td>Email</td>
                                     <td>{{ $users->email }}</td>
                                 </tr>
+                                @if($employee)
                                 <tr>
                                     <td>Employee ID</td>
                                     <td>{{ $employee->id }}</td>
@@ -63,6 +69,7 @@
                                         <td>{{ $emp->Name }}</td>
                                     </tr>
                                 @endforeach
+                                @endif
                             </table>
                         </div>
                     </div>

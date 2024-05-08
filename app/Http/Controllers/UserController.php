@@ -92,6 +92,7 @@ class UserController extends Controller
             Rule::unique('users')->ignore($users->id)],
             'password' => ['required','min:8'],
             'roles' => ['required'],
+            'image'=>['image'],
         ]);
          $this->userRepository->update($id,$data);
          return redirect()->route('user.index');
@@ -113,7 +114,7 @@ class UserController extends Controller
         $userid=$user->id;
         $users=$this->userRepository->getById($userid);
         $employee=Employee::where('user_id',$userid)->first();
-        return view('Employee.profile',compact('users','employee'));
+        return view('Employee.Profile.view',compact('users','employee'));
     }
 
     public function storeImage(Request $request,string $id)

@@ -35,16 +35,14 @@ Route::get('/dashboard', function () {
 Route::get('/redirect',[HomeController::class,'redirect']);
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     
     Route::resource('employee', EmployeeController::class);
-    Route::resource('/user',UserController::class);
-   
+    Route::resource('/user',UserController::class); 
     Route::resource('/role',RoleController::class);
-  
     Route::resource('/leave',LeaveRequestController::class);
     Route::resource('/project',ProjectController::class);
     Route::resource('/timesheet',TimesheetController::class);
@@ -61,7 +59,8 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['prefix' => 'report'],function(){
         Route::get('/',[ReportController::class,'index'])->name('report.index');
-        Route::post('/get-data',[ReportController::class,'getdata'])->name('report.getdata');
+        Route::get('/monthlytimesheet',[ReportController::class,'monthlytimesheet'])->name('report.monthly');
+        Route::post('/monthlytimesheet/get-data',[ReportController::class,'getdata'])->name('report.getdata');
     });
 
     Route::group(['prefix' => 'projectdash'], function () {

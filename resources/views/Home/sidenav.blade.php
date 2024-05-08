@@ -29,6 +29,8 @@
           
             <div class="sb-sidenav-menu-heading">Interface</div>
             @cannot('hasEmployeeType')
+            
+        
             <a class="nav-link" href="{{route('role.index')}}">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-gear"></i></div>
             Role Management
@@ -61,7 +63,7 @@
             </a>
           
             @else
-
+              {{-- for specific project --}}
             @if(isset($id))
             <a class="nav-link" href="{{route('timesheet.view',$projects->id)}}">
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-eye"></i></div>
@@ -71,7 +73,7 @@
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-calendar-days"></i></div>
                Add Timesheet
             </a>
-           
+           {{-- end for specific project --}}
             @else
        
             <a class="nav-link" href="{{route('user.profile')}}">
@@ -86,16 +88,15 @@
                 <div class="sb-nav-link-icon"><i class="fa-solid fa-file"></i></div>
                 Project
             </a>
+
+            
             <a class="nav-link" href="{{route('leave.index')}}">
                 <div class="sb-nav-link-icon"> <i class="fa-regular fa-calendar"></i></div>
             leave Management
             </a>
-
-         
             @endif
             @endcannot
-            
-          
+         
            
         </div>
     </div>

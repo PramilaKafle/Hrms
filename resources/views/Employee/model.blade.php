@@ -76,11 +76,11 @@
                             <input type="email" class="form-control" id="email" placeholder="Enter email"
                                 name="email" @if(isset($user))  value="{{ $user->email }}" @endif>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="pwd" class="form-label">Password:</label>
                             <input type="password" class="form-control" id="pwd" placeholder="Enter password"
                                 name="password">
-                        </div>
+                        </div> --}}
                         <div class="form-group mt-3">
                             <button class="btn btn-primary">Submit</button>
                         </div>

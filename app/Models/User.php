@@ -11,7 +11,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
+use Mail;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -63,7 +66,13 @@ class User extends Authenticatable
             return $this->belongsToMany(Emp_type::class,'employees');
         }
 
-
+        public static function generatePassword()
+        {
+          // Generate random string and encrypt it. 
+          $randomString = Str::random(35);
+          $hashedString = Hash::make($randomString);
+          return $hashedString;
+        }
 
         public function hasPermission($permissionName)
         {

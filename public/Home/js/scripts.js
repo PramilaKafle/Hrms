@@ -36,7 +36,7 @@ $(document).ready(function() {
     $('#from, #to').datepicker({
         dateFormat: 'yy-mm-dd',
         autoclose: true ,
-        //minDate: 0 // Disable dates before today    
+        minDate: 0  
         
     });
 
@@ -51,7 +51,7 @@ $(document).ready(function() {
               if(celltext.includes(searchText))
                 {
                     rowVisibility=true;
-                    return false; // Exit the loop early if match is found in current row
+                    return false; // Exit the loop 
                 }
             });
 

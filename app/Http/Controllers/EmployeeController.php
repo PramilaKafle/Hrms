@@ -16,6 +16,10 @@ use App\Repositories\UserRepository;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\ProjectRepository;
 
+use Illuminate\Support\Facades\Password;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
+
 
 class EmployeeController extends Controller
 {
@@ -69,11 +73,16 @@ class EmployeeController extends Controller
       $data = $request->validate([
             'name' => ['required','string','max:255' ],
             'email' => ['required','email','unique:users'],
-            'password' => ['required','min:8'],
             'emp_type_id' => ['required'],
         ]); 
-       //dd($data);
+        $password = User::generatePassword();
+        $data['password']=$password;
+        $email=$data['email'];
+       
        $userid = $this->employeeRepository->store($data);
+       $user = User::where('email', $email)->first();
+       $token = Password::createToken($user);
+       Mail::send(new WelcomeEmail($email,$token));
         return   redirect()->route('employee.index');
     }
 
@@ -116,7 +125,6 @@ class EmployeeController extends Controller
             'name' => ['required','string','max:255' ],
             'email' => ['required','email',
             Rule::unique('users')->ignore($user->id)],
-            'password' => ['required','min:8'],
             'emp_type_id' => ['required'],
             'project'=>[],
             

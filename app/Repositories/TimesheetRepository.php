@@ -7,6 +7,8 @@ use App\Models\Timesheet;
 use App\Models\Employee;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use DateTime;
+use DateInterval;
 class TimesheetRepository extends BaseRepository
 {
     public function __construct( ){
@@ -58,10 +60,6 @@ public function store(array $entries)
    public function  generateTimesheetData($data)
    {
     
-    // $carbonStartDate = Carbon::createFromFormat('m/d/Y', $data['start_date']);
-    // $carbonEndDate= Carbon::createFromFormat('m/d/Y',$data['end_date']);
-    // $startDate = $carbonStartDate->format('Y-m-d');
-    // $endDate = $carbonEndDate->format('Y-m-d');
     $startDate=$data['start_date'];
     $endDate=$data['end_date'];
 
@@ -74,28 +72,58 @@ public function store(array $entries)
      return $timesheet;
    }
 
-   public function getreportdata($data)
+public function getreportdata($data) 
    {
     
-    $startDate = $data['start_date'];
-    $endDate = $data['end_date'];
+     $startDate = $data['start_date'];
+     $endDate = $data['end_date'];
+ 
+
+     $sql = "
+     WITH RECURSIVE MonthsBetween AS (
+         SELECT CAST(:start_date AS DATE) AS MonthDate
+         UNION ALL
+         SELECT DATE_ADD(MonthDate, INTERVAL 1 MONTH)
+         FROM MonthsBetween
+         WHERE DATE_ADD(MonthDate, INTERVAL 1 MONTH)  < LAST_DAY(:end_date)
+     )
+     SELECT 
+      u.name,DATE_FORMAT(MonthDate, '%M %Y') AS MonthName, 
+     t.employee_id, 
+    SUM(CASE 
+       WHEN t.Date BETWEEN :startdate AND :enddate 
+       THEN t.working_hour 
+       ELSE 0 
+       END)
+     AS total_hours
+     FROM MonthsBetween
+     LEFT JOIN timesheets t 
+       ON MONTH(MonthDate) = MONTH(t.Date)
+       AND YEAR(MonthDate) = YEAR(t.Date) 
+      LEFT JOIN employees e ON t.employee_id =e.id
+      LEFT JOIN users u ON e.user_id = u.id
+     GROUP BY u.name,MonthDate,t.employee_id
+     ";
+
     
-  
-     $timesheet = DB::select('
-        SELECT u.name, t.*
-        FROM timesheets t
-        JOIN employees e ON t.employee_id = e.id
-        JOIN users u ON e.user_id = u.id
-        WHERE t.Date BETWEEN ? AND ?
-    ', [$startDate, $endDate]);
-  
 
+$monthlyData = DB::select($sql, [
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+        'startdate'=>$startDate,
+        'enddate'=>$endDate,
+    
+    ]);
 
-    return $timesheet;
+    return $monthlyData;
 
 
 
-   }
+}
+
+
+
+
 
 
    

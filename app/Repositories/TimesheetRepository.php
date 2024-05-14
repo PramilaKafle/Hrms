@@ -51,6 +51,7 @@ public function store(array $entries)
         //dd($employees);
         $timesheets = Timesheet::where('project_id', $projects->id)
                             ->where('employee_id', $employees->id)
+                            ->orderBy('Date','asc')
                             ->get();
     
         return $timesheets;

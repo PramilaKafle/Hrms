@@ -15,11 +15,12 @@ use App\Interfaces\BaseRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\ProjectRepository;
-
+use App\Notifications\Welcome;
 use Illuminate\Support\Facades\Password;
 use App\Mail\WelcomeEmail;
-use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class EmployeeController extends Controller
 {
@@ -78,12 +79,16 @@ class EmployeeController extends Controller
         $password = User::generatePassword();
         $data['password']=$password;
         $email=$data['email'];
+        $name=$data['name'];
        
-       $userid = $this->employeeRepository->store($data);
-       $user = User::where('email', $email)->first();
-       $token = Password::createToken($user);
-       Mail::send(new WelcomeEmail($email,$token));
+     $userid = $this->employeeRepository->store($data);
+
+        $user = User::where('email', $email)->first();
+        $token = Password::createToken($user);
+        $user->notify( new Welcome($token,$name));
+      // Notification::send($user, new Welcome($token,$name));
         return   redirect()->route('employee.index');
+       
     }
 
     /**
@@ -158,6 +163,6 @@ class EmployeeController extends Controller
         //$user=$this->baseRepository->getById(User::class,$id);
        
         $this->userRepository->delete($id);
-        return redirect()->route('employee.index');
+        return redirect()->route('employee.index')->with('success','Employee Deleted Successfully!');
     }
 }

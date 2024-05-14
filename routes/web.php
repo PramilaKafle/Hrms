@@ -24,13 +24,13 @@ use App\Http\Controllers\ReportController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 
-Route::get('/reset-password/{token}',function(string $token){
-return view('auth.reset-password',['token' => $token]);
-})->name('password.reset');
+// Route::get('/reset-password/{token}',function(string $token){
+// return view('auth.reset-password',['token' => $token]);
+// })->name('password.reset');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -38,9 +38,9 @@ Route::get('/dashboard', function () {
  
 
 Route::middleware('auth')->group(function () {
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
    
     Route::get('/redirect',[HomeController::class,'redirect']);
 
@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/userprofile',[UserController::class,'profile'])->name('user.profile');
     Route::post('/userprofile/{id}/',[UserController::class,'storeImage'])->name('upload.image');
     Route::post('/timesheet/generate-data',[TimesheetController::class,'generatedata'])->name('timesheet.generate');
+    Route::post('/timesheet/approve',[TimesheetController::class,'approve'])->name('timesheet.approve');
 
     Route::get('/assign',[EmployeeController::class,'projectassign'])->name('employee.assign');
     Route::post('/assign/store',[EmployeeController::class,'projectstore'])->name('employee.project');

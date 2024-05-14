@@ -43,6 +43,7 @@
                     <th scope="col" style="width: 10%">Timesheet ID</th>
                     <th scope="col" style="width: 10%">Date</th>
                     <th scope="col" style="width: 10%">Hours Worked</th>
+                    <th scope="col" style="width: 10%">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,6 +67,7 @@
                     <td>{{$timesheet->id}}</td>
                     <td>{{$timesheet->Date}}</td>
                     <td>{{$timesheet->working_hour}}</td>
+                    <td>{{$timesheet->status}}</td>
                     @php
                          $totalHours += $timesheet->working_hour;
                     @endphp

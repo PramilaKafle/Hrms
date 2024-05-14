@@ -134,4 +134,16 @@ class TimesheetController extends Controller
     }
   
 
+    public function approve(Request $request)
+    {
+        try {
+            $timesheetIds = $request->input('timesheet_ids');
+            Timesheet::whereIn('id', $timesheetIds)
+            ->update(['status' => 'approved']);
+            return response()->json(['message' => 'All timesheets approved successfully']);
+        } catch (Exception $e) {
+            Log::error('Error updating timesheet ID ' . $timesheetId . ': ' . $e->getMessage());
+        }
+    }
+
 }

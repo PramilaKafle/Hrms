@@ -17,6 +17,7 @@ class EmployeeRepository extends BaseRepository{
     $user=User::create($data);
     $employeedata = $data['emp_type_id'];
     $user->emp_types()->sync($employeedata);    
+    
     return redirect()->back()->with('success', 'Employee created successfully');
   }
 

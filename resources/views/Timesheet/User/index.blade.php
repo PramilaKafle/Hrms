@@ -52,7 +52,9 @@
                         <th scope="col" style="width: 10%">TimesheetID</th>
                         <th scope="col" style="width: 10%">Date</th>
                         <th scope="col" style="width: 10%">Hours Worked</th>
+                        
                     </tr>
+                
                 </thead>
                 <tbody>
                

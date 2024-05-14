@@ -44,6 +44,32 @@
                 }
             });
         });
+
+       $(document).on('click', '#timesheet-approve', function (e){
+            e.preventDefault();
+        var timesheetIds = [];
+        $('#timesheettable tbody tr').each(function () {
+            var timesheetId = $(this).find('td:eq(1)').text(); 
+            timesheetIds.push(timesheetId);
+        });
+            $.ajax({
+             type:'POST',
+             url:'/timesheet/approve',
+             data:{timesheet_ids : timesheetIds},
+             headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
+             success: function (response) {
+                 console.log(response);
+                
+             },
+             error: function (xhr, status, error) {
+                var errorMessage = xhr.responseText;
+                console.log(errorMessage);
+             }
+            });
+         });
+       
     });
 
 
@@ -66,6 +92,15 @@ function PopulateTimesheetData(response) {
 
             tableBody.append(newRow);
         });
+     
+  
+        var totalRow = '<tr>' +
+        '<td colspan="3" ><strong>Action</strong></td>' +
+        '<td> <button class="btn btn-success mx-4" id="timesheet-approve">Approve </button>'+
+        '<button class="btn btn-danger mx-4">Decline </button></</td>' +
+      
+        '</tr>';
+         tableBody.append(totalRow);
         $('#timesheet-data-not-found').addClass('hidden');
     } else {
 
@@ -73,6 +108,7 @@ function PopulateTimesheetData(response) {
         $('#timesheet-data-not-found').removeClass('hidden');
     }
 }
+
 // user timesheet view ends here
 
 
@@ -99,7 +135,7 @@ $(document).ready(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
-           // console.log(response);
+            //console.log(response);
             UpdateTimesheetData(response,startDate,endDate);
             
         },
@@ -120,7 +156,7 @@ function UpdateTimesheetData(response,startDate,endDate)
     tableBody.empty();
     var totalhours = 0;
     var sl = 0;
-    
+     //console.log(response.data);
     $.each(response.data, function (index,data) {
         var entryDate = moment(data.Date);  
         if (entryDate.isBetween(startDate, endDate)){
@@ -130,6 +166,7 @@ function UpdateTimesheetData(response,startDate,endDate)
                 '<td>' + data.id + '</td>' +
                 '<td>' + data.Date + '</td>' +
                 '<td>' + data.working_hour + '</td>' +
+                '<td>' + data.status + '</td>' +
                 '</tr>';
                
             tableBody.append(newRow);
@@ -138,7 +175,7 @@ function UpdateTimesheetData(response,startDate,endDate)
         
     });
     var totalRow = '<tr>' +
-        '<td colspan="3" style="text-align:center"><strong>Total Hours Worked:</strong></td>' +
+        '<td colspan="4" style="text-align:center"><strong>Total Hours Worked:</strong></td>' +
         '<td><strong>' + totalhours + '</strong></td>' +
         '</tr>';
     tableBody.append(totalRow);

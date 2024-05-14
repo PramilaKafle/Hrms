@@ -7,7 +7,7 @@
     </ol>
     <div class="main-content mt-4">
         @if ($message = @session('success'))
-            <div class="alert alert-danger">{{ $message }}</div>
+            <div class="alert alert-danger ">{{ $message }}</div>
         @elseif($message = @session('error'))
             <div class="alert alert-danger">{{ $message }}</div>
         @endif

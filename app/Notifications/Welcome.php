@@ -40,7 +40,7 @@ class Welcome extends Notification implements ShouldQueue
                     ->subject('Welcome Mail')
                     ->greeting("Hello! {$this->name} ")
                     ->line('You have been registerd. Click below to get login info!')
-                    ->action('Reset Password', route('password.reset',$this->token))
+                    ->action('Reset Password',route('password.reset',$this->token))
                     ->line('Thank you for using our application!');
     }
 

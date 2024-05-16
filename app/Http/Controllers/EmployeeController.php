@@ -18,6 +18,7 @@ use App\Repositories\ProjectRepository;
 use App\Notifications\Welcome;
 use Illuminate\Support\Facades\Password;
 use App\Mail\WelcomeEmail;
+use App\Jobs\SendWelcomeMail;
 
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
@@ -84,9 +85,13 @@ class EmployeeController extends Controller
      $userid = $this->employeeRepository->store($data);
 
         $user = User::where('email', $email)->first();
+      
         $token = Password::createToken($user);
-        $user->notify( new Welcome($token,$name));
+      // $user->notify( new Welcome($token,$name));
+        // dispatch(new SendWelcomeMail($user));
       // Notification::send($user, new Welcome($token,$name));
+
+      SendWelcomeMail::dispatch($user,$token,$name);
         return   redirect()->route('employee.index');
        
     }

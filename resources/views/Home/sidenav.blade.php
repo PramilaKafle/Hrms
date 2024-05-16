@@ -57,6 +57,10 @@
                 <div class="sb-nav-link-icon"> <i class="fa-regular fa-calendar"></i></div>
             leave Management
             </a>
+            {{-- <a class="nav-link" href="{{route('status.index')}}">
+                <div class="sb-nav-link-icon"> <i class="fa-solid fa-file-export"></i></div>
+            Status
+            </a> --}}
             <a class="nav-link" href="{{route('report.index')}}">
                 <div class="sb-nav-link-icon"> <i class="fa-solid fa-file-export"></i></div>
             Report

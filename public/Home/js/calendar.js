@@ -9,10 +9,62 @@ $(document).ready(function () {
     var selectedProject = parseInt($('#project').val());
     reloadCalendar(selectedMonth, selectedProject);
     $('#timesheet-btn').removeClass('hidden');
+    $('#timesheet-approve-btn').removeClass('hidden');
   }
 
 });
 
+///for timesheet approval
+$(document).on('click','#timesheet-submit-btn',function(e){
+  e.preventDefault();
+ var monthid= parseInt($('#month').val());
+ var Projectid = parseInt($('#project').val());
+ var employeeId = $('#employee_id').val();
+ var currentYear = new Date().getFullYear();
+ var startDate = new Date(currentYear,  monthid-1, 2);
+ var endDate = new Date(currentYear, monthid, 1);
+  const statusdata = [];
+ $('select[name="assignTo"]').each(function() {
+  var statusId = $(this).attr('id').split('_')[1]; // Extract status ID from select ID
+  var selectedUserId = $(this).val(); // Get the selected user ID
+   const items ={
+    statusid:statusId,
+    userid:selectedUserId,
+   }
+   statusdata.push(items);
+ });
+ var formData = {
+  month_id: monthid,
+  project_id: Projectid,
+  employee_id: employeeId,
+  startDate: startDate.toISOString().split('T')[0], 
+  endDate: endDate.toISOString().split('T')[0], 
+  status : statusdata
+};
+   //console.log(formData);
+  $.ajax({
+    type: "POST",
+    url: '/projectdash/'+Projectid+'/timesheet/monthly-data',
+    data:{
+      formData
+    },
+    headers:{
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    success:function(response){
+     console.log(response);
+    },
+    error:function(xhr,status,error)
+    {
+    console.log(xhr.responseText);
+    }
+
+  })
+ });
+
+
+
+// timesheet approval ends here
 let timesheetdata = [];
 
 // saving calendar input data
@@ -25,11 +77,12 @@ $('#timesheet-btn').click(function () {
     const date = $(this).data('date');
     const projectId = $('#project').val();
     const employeeId = $('#employee_id').val();
+    //const assignedTo = $('#assign-to-user').val();
     const timesheetId = $(this).data('timesheet-id') ? $(this).data('timesheet-id') : '';
     const isEdited = $(this).data('edited');
     const currentDateMonth= new Date(date).getMonth()+1;
     
-  
+  //console.log(assignedTo);
     if (isEdited && (currentDateMonth == selectedMonth)) {
       //console.log(currentDateMonth);
        const items={
@@ -214,7 +267,7 @@ function saveCalendarData(timesheetdata) {
     });
   });
 
-  //console.log(requestData);
+  console.log(requestData);
   $.ajax({
     type: "post",
     url: '/projectdash/batch/timesheet/store-data', 
@@ -265,44 +318,7 @@ function saveCalendarData(timesheetdata) {
 
 }
 
-// function editCalendarData(editedContent, date, projectId, employeeId, timesheetid) {
-//   $.ajax({
-//     type: "post",
-//     url: '/projectdash/' + timesheetid + '/timesheet/edit-data',
-//     data: {
-//       id: timesheetid,
-//       Date: date,
-//       working_hour: editedContent,
-//       project_id: projectId,
-//       employee_id: employeeId
 
-//     },
-
-//     headers: {
-//       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in header
-//     },
-//     success: function (response) {
-//       // console.log("Data added success",response);
-//       $('#response-container').css('display', 'block');
-//       $('#response-container').html('<p>' + response.message + '</p>');
-//       $('#response-container').fadeOut(3000);
-//       reloadCalendar($('#month').val(), $('#project').val());
-
-
-//     },
-//     error: function (xhr, status, error) {
-//       console.log("error occured", error);
-//       const errors = xhr.responseJSON.errors;
-//       if (errors) {
-//         console.log(errors.working_hour);
-//         $('#response-container').css('display', 'block');
-//         $('#response-container').html('<p>' + errors.working_hour + '</p>');
-//         $('#response-container').fadeOut(3000);
-//       }
-//       reloadCalendar($('#month').val(), $('#project').val());
-//     }
-//   });
-// }
 
 function deleteCalendarData(timesheetid) {
   console.log(timesheetid);

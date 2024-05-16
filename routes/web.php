@@ -11,6 +11,7 @@ use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\MonthlyTimesheetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/project',ProjectController::class);
     Route::resource('/timesheet',TimesheetController::class);
     
-    
+    Route::get('/timesheet-status',[TimesheetController::class,'status'])->name('timesheet.status');
+    Route::post('/timesheet-status/store',[TimesheetController::class,'status_store'])->name('status.store');
     Route::get('/userprofile',[UserController::class,'profile'])->name('user.profile');
     Route::post('/userprofile/{id}/',[UserController::class,'storeImage'])->name('upload.image');
     Route::post('/timesheet/generate-data',[TimesheetController::class,'generatedata'])->name('timesheet.generate');
@@ -67,7 +69,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/monthlytimesheet',[ReportController::class,'monthlytimesheet'])->name('report.monthly');
         Route::post('/monthlytimesheet/get-data',[ReportController::class,'getdata'])->name('report.getdata');
     });
-
+ 
     Route::group(['prefix' => 'projectdash'], function () {
         Route::get('/', [ProjectController::class, 'dashboard'])->name('project.dashboard');
         Route::get('/{project}', [ProjectController::class, 'getProject'])->name('project.selected');
@@ -76,6 +78,7 @@ Route::middleware('auth')->group(function () {
 
         Route::group(['prefix' => '{project}/timesheet'], function () {
             Route::get('/', [TimesheetController::class, 'create'])->name('timesheet.create');
+            Route::post('/monthly-data',[MonthlyTimesheetController::class,'store'])->name('timesheet.monthly');
             Route::post('/store-data', [TimesheetController::class, 'store'])->name('timesheet.store');
             Route::get('/get-data', [TimesheetController::class, 'gettimesheetdata'])->name('timesheet.getdata');
             Route::post('/delete-data', [TimesheetController::class, 'deletedata'])->name('timesheet.deletedata');

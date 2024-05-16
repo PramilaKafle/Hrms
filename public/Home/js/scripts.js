@@ -63,5 +63,23 @@ $(document).ready(function() {
         });
        
     });
-    
+ 
+        $('#check').change(function() {
+            if ($(this).is(':checked')) {
+                $('#review-input').show();
+            } else {
+                $('#review-input').hide();
+            }
+        });
+
+        $('#approve').change(function() {
+            if ($(this).is(':checked')) {
+                $('#approve-input').show();
+            } else {
+                $('#approve-input').hide();
+            }
+        });
+
+       
+ 
 });

@@ -1,5 +1,5 @@
 
-// for user to view ecah employee timesheet
+// for user to view eech employee timesheet
     $(document).ready(function () {
         $('#timesheet-generate').click(function (e) {
             e.preventDefault();
@@ -62,6 +62,7 @@
              success: function (response) {
                  console.log(response);
                 
+                
              },
              error: function (xhr, status, error) {
                 var errorMessage = xhr.responseText;
@@ -69,7 +70,7 @@
              }
             });
          });
-       
+    
     });
 
 
@@ -88,6 +89,7 @@ function PopulateTimesheetData(response) {
                 '<td>' + timesheet.id + '</td>' +
                 '<td>' + timesheet.Date + '</td>' +
                 '<td>' + timesheet.working_hour + '</td>' +
+                '<td>' + timesheet.status +'</td>'+
                 '</tr>';
 
             tableBody.append(newRow);
@@ -95,8 +97,8 @@ function PopulateTimesheetData(response) {
      
   
         var totalRow = '<tr>' +
-        '<td colspan="3" ><strong>Action</strong></td>' +
-        '<td> <button class="btn btn-success mx-4" id="timesheet-approve">Approve </button>'+
+        '<td colspan="4" ><strong>Action</strong></td>' +
+        '<td> <button class="btn btn-success " id="timesheet-approve">Approve </button>'+
         '<button class="btn btn-danger mx-4">Decline </button></</td>' +
       
         '</tr>';
@@ -108,6 +110,8 @@ function PopulateTimesheetData(response) {
         $('#timesheet-data-not-found').removeClass('hidden');
     }
 }
+
+
 
 // user timesheet view ends here
 

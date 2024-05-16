@@ -8,8 +8,12 @@ use App\Models\Employee;
 use App\Models\Project;
 use App\Models\Timesheet;
 use App\Models\User;
+use App\Models\Status;
+use App\Models\TimesheetStatus;
 use App\Repositories\TimesheetRepository;
 use App\Repositories\EmployeeRepository;
+use App\Repositories\BaseRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Validator;
 use Carbon\carbon;
 
@@ -17,10 +21,14 @@ class TimesheetController extends Controller
 {
     private TimesheetRepository  $timesheetRepository;
     private EmployeeRepository  $employeeRepository;
-    public function __construct(TimesheetRepository  $timesheetRepository,EmployeeRepository  $employeeRepository)
+    private UserRepository  $userRepository;
+    private $baseRepository;
+    public function __construct(TimesheetRepository  $timesheetRepository,EmployeeRepository  $employeeRepository,UserRepository  $userRepository)
     {
        $this->timesheetRepository=$timesheetRepository;
        $this->employeeRepository=$employeeRepository;
+       $this->userRepository =$userRepository;
+       $this->baseRepository = new BaseRepository(new Status());
     }
     public function index()
      {
@@ -29,8 +37,9 @@ class TimesheetController extends Controller
       $projects=Project::all();
       $users=User::all();
       $employees=$this->employeeRepository-> getEmployeeOnly();
-       
-       return view('Timesheet.User.index',compact('timesheetdataes','projects','users','employees'));
+      $timesheets=$this->timesheetRepository->getmonthlytimesheetdata();
+        //dd($timesheets);
+       return view('Timesheet.User.index',compact('timesheetdataes','projects','users','employees','timesheets'));
     }
 
     /**
@@ -41,9 +50,11 @@ class TimesheetController extends Controller
         $user=auth()->user();
         $employees=$this->employeeRepository->findByUserId($user->id);
         $projects=Project::find($id);
+        $users=$this->userRepository->getUserOnly();
+        $statuses = Status::all();
        // $timesheet=$this->timesheetRepository->gettimesheetdata($projects,$employees);
         //dd($timesheet);
-        return view('Timesheet.index',compact('projects','id','employees'));
+        return view('Timesheet.index',compact('projects','id','employees','users','statuses'));
     }
 
     /**
@@ -73,9 +84,9 @@ class TimesheetController extends Controller
      */
     public function show(string $id)
     {
-        $employee=$this->employeeRepository->getUserByEmpid($id);
-        dd($employee);
-       return view('Timesheet.User.viewtimesheet');
+        //$employee=$this->employeeRepository->getUserByEmpid($id);
+        //dd($employee);
+       //return view('Timesheet.User.viewtimesheet');
     }
 
     /**
@@ -146,4 +157,21 @@ class TimesheetController extends Controller
         }
     }
 
+
+    public function status()
+    {
+        return view('status.index');
+    }
+    public function status_store(Request $request)
+    {
+       $data = $request->validate([
+         'name'=>['required'],
+       ]);
+       //dd($data);
+       $this->baseRepository->store($data);
+       return redirect()->route('timesheet.index');
+       
+    }
+
+   
 }

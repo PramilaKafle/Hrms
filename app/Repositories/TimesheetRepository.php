@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Timesheet;
+use App\Models\TimesheetStatus;
 use App\Models\Employee;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -123,6 +124,18 @@ $monthlyData = DB::select($sql, [
 }
 
 
+public function getmonthlytimesheetdata()
+{
+  $user=Auth()->user();
+  $timesheets = DB::table('timesheet_statuses')
+                    ->join('monthly_timesheets', 'timesheet_statuses.monthlytimesheet_id', '=', 'monthly_timesheets.id')
+                    ->where('timesheet_statuses.user_id', $user->id)
+                    ->select('timesheet_statuses.*', 'monthly_timesheets.month_id', 'monthly_timesheets.employee_id')
+                   ->get();
+ 
+ 
+                   return $timesheets;
+}
 
 
 

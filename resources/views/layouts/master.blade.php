@@ -29,7 +29,8 @@
                 @include('Home.footer')
             </div>
         </div>
-        
+ 
+         
  
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{{asset('Home/js/scripts.js')}}"></script>
@@ -51,6 +52,8 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> --}}
 {{--  --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+
+
 
 
 </body>

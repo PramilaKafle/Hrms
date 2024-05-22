@@ -32,6 +32,25 @@ class HomeController extends Controller
         return view('Home.dashboard',compact('employees','allusers','projects','leaves'));
     }
 
+public function index()
+{
+    $userCount = User::count();
+    $employeeCount =Employee::count();
+    $employeeids =Employee::pluck('user_id')->toArray();
+    $users =User::whereNotIn('id',$employeeids)->get();
+    return response()->json([
+        'userCount' => $userCount,
+        'employeeCount'=>$employeeCount,
+        'users'=>$users,
+    ]);
+}
 
-// }
+public function getUser($id)
+{
+    $user = User::findOrFail($id);
+    return response()->json([
+        'user' => $user,
+    ]);
+}
+
  }

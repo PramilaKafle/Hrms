@@ -38,6 +38,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
  
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -47,7 +49,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('employee', EmployeeController::class);
     Route::resource('/user',UserController::class); 
-    Route::resource('/role',RoleController::class);
+     Route::resource('/role',RoleController::class);
+  
     Route::resource('/leave',LeaveRequestController::class);
     Route::resource('/project',ProjectController::class);
     Route::resource('/timesheet',TimesheetController::class);
@@ -85,8 +88,12 @@ Route::middleware('auth')->group(function () {
         });
     });
   
+
+   
 });
 
 
+
+Route::view('/{any?}', 'dashboard')->where('any', '.*');
 
 require __DIR__.'/auth.php';

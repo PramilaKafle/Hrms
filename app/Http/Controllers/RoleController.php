@@ -28,8 +28,8 @@ class RoleController extends Controller
        $this->roleRepository= $roleRepository;
        $this->baseRepository = new BaseRepository(new Permission());
        
-       $this->middleware('CheckPermission:create_role')->except('index','show','edit','update');
-       $this->middleware('CheckPermission:edit_role')->only('edit','update');
+    //    $this->middleware('CheckPermission:create_role')->except('index','show','edit','update');
+    //    $this->middleware('CheckPermission:edit_role')->only('edit','update');
     //    $this->middleware('CheckPermission:view_role')->only('show');
     }
     public function index(Request $request)
@@ -47,8 +47,12 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions=$this->baseRepository->all();
-        return view('Role.formmodel',compact('permissions'));
+       // $permissions=$this->baseRepository->all();
+       // return view('Role.formmodel',compact('permissions'));
+       $permissions=Permission::all();
+       return response()->json([
+        'permissions'=>$permissions
+       ]);
         
     }
 
@@ -59,11 +63,16 @@ class RoleController extends Controller
     {
         $data=$request->validate([
             'name' => ['required','string','max:255' ],
-        'permissions'=>['required'],
+        'permissions.*'=>['required'],
         ]);
 
         $this->roleRepository->store($data);
-        return redirect()->route('role.index');
+        //return redirect()->route('role.index');
+        //$data= $request->all();
+        return response()->json([
+            'message'=>'Data stored Successfully',
+            'data' =>$data
+        ]);
     }
 
     /**
@@ -72,7 +81,12 @@ class RoleController extends Controller
     public function show(string $id)
     {
         $role=$this->roleRepository->getById($id);
-        return view('Role.view',compact('role'));
+        //return view('Role.view',compact('role'));
+        $permissions = $role->permissions()->get();
+        return response()->json([
+            'role'=>$role,
+            'permissions'=>$permissions,
+        ]);
     }
 
     /**
@@ -92,12 +106,16 @@ class RoleController extends Controller
     {
         $data=$request->validate([
             'name' => ['required','string','max:255' ],
-        'permissions'=>['required'],
+        'permissions.*'=>['required'],
         ]);
       
         $this->roleRepository->update($id,$data);
-        $role=$this->roleRepository->getById($id);
-        return redirect()->route('role.show',compact('role'));
+       // $role=$this->roleRepository->getById($id);
+       // return redirect()->route('role.show',compact('role'));
+       return response()->json([
+        'message'=>'Role data updated sucessfully',
+        'data'=>$data
+       ]);
     }
 
     /**
@@ -107,7 +125,17 @@ class RoleController extends Controller
     {
         $this->roleRepository->delete($id);
 
-        return redirect()->route('role.index');
+        //return redirect()->route('role.index');
+        return response()->json(['message' => 'Role deleted successfully']);
+    }
 
+    public function getRoles(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $roles =$this->roleRepository->all();
+        return response()->json([
+            'roles'=>$roles,
+        ]);
+       
     }
 }

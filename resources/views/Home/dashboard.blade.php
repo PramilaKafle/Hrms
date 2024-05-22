@@ -1,6 +1,5 @@
 @extends('layouts.master')
 @section('contents')
-
     {{-- @if (auth()->user()->emp_types()->exists())
    
 
@@ -32,7 +31,7 @@
                     <div class="card-header align-items-center">Employees</div>
                     <div class="card-body">
                         <div class=" d-flex align-items-center justify-content-center">
-                         
+
                             <div class="text-white mx-2" style="font-size: 20px;">{{ $employees->count() }}</div>
                         </div>
                     </div>
@@ -43,14 +42,15 @@
                     <div class="card-header align-items-center">Total Projects</div>
                     <div class="card-body">
                         <div class=" d-flex align-items-center justify-content-center">
-                         
+
                             <div class="text-white mx-2" style="font-size: 20px;">{{ $projects->count() }}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-   
+        <div id="dashboard"></div>
+        <div id="root"></div>
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
@@ -96,8 +96,9 @@
                 </table>
             </div>
         </div>
+
         {{-- user dasboard ends here --}}
-        @else
+    @else
         {{-- employee dashboard --}}
         <div class="row">
             <div class="col-xl-3 col-md-6">
@@ -110,9 +111,9 @@
                             <div class="text-white mx-2" style="font-size: 20px;">{{ $projects->count() }}</div>
                         </div>
                     </div>
-        
+
                 </div>
-        
+
             </div>
 
             <div class="col-xl-3 col-md-6">
@@ -120,7 +121,7 @@
                     <div class="card-header align-items-center">Leave Requests</div>
                     <div class="card-body">
                         <div class=" d-flex align-items-center justify-content-center">
-                         
+
                             <div class="text-white mx-2" style="font-size: 20px;">{{ $leaves->count() }}</div>
                         </div>
                     </div>
@@ -130,6 +131,4 @@
     @endcannot
     {{-- 
     @endif --}}
-
-
 @endsection

@@ -131,7 +131,7 @@ class RoleController extends Controller
 
     public function getRoles(Request $request)
     {
-        $page = $request->input('page', 1);
+        // $page = $request->input('page', 1);
         $roles =$this->roleRepository->all();
         return response()->json([
             'roles'=>$roles,

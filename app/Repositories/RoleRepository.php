@@ -31,4 +31,5 @@ class RoleRepository extends BaseRepository{
         return redirect()->back()->with('success', 'Role Updated successfully');
     }
 
+  
 }
